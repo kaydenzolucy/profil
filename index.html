@@ -16,6 +16,16 @@ body {
   overflow-x: hidden;
 }
 
+/* Fade-in */
+.fade {
+  animation: fadeIn 2s ease forwards;
+  opacity: 0;
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* ===== MATRIX BACKGROUND ===== */
 canvas {
   position: fixed;
@@ -56,36 +66,33 @@ canvas {
   animation: glitch2 1s infinite linear alternate-reverse;
 }
 
-/* ===== GLITCH ANIMATIONS ===== */
-@keyframes glitch1 {
-  0% { clip: rect(0, 9999px, 30px, 0); }
-  100% { clip: rect(70px, 9999px, 140px, 0); }
-}
-@keyframes glitch2 {
-  0% { clip: rect(5px, 9999px, 40px, 0); }
-  100% { clip: rect(110px, 9999px, 160px, 0); }
-}
-
-/* ===== TERMINAL BOX ===== */
+/* TERMINAL BOX */
 .terminal {
   width: 85%;
   margin: 40px auto;
   border: 1px solid #00ff9c;
   border-radius: 6px;
   padding: 20px;
-  box-shadow: 0 0 15px #00ff9c;
+  box-shadow: 0 0 20px #00ff9c;
   background: rgba(0, 0, 0, 0.7);
 }
 
-/* ===== RUNNING QUOTE ===== */
+/* INFO GRID */
+.info-grid {
+  display: grid;
+  grid-template-columns: 120px auto;
+  row-gap: 6px;
+  font-size: 18px;
+}
+
+/* RUNNING TEXT */
 .running-text {
   font-size: 18px;
   white-space: nowrap;
   overflow: hidden;
   box-sizing: border-box;
-  animation: slide 12s linear infinite;
+  animation: slide 15s linear infinite;
 }
-
 @keyframes slide {
   0% { transform: translateX(100%); }
   100% { transform: translateX(-100%); }
@@ -105,32 +112,64 @@ a:hover {
   margin-top: 40px;
   opacity: 0.7;
 }
+
+/* ACCESS GRANTED */
+.access {
+  font-size: 22px;
+  text-align: center;
+  margin-top: 20px;
+  color: #00ff9c;
+  opacity: 0;
+  animation: acc 1.2s ease forwards;
+}
+@keyframes acc {
+  0% { opacity: 0; }
+  50% { opacity: 1; text-shadow: 0 0 12px #00ff9c; }
+  100% { opacity: 0.6; }
+}
+
+/* AVATAR */
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 100%;
+  display: block;
+  margin: 20px auto;
+  border: 2px solid #00ff9c;
+  box-shadow: 0 0 20px #00ff9c;
+}
 </style>
 </head>
 <body>
 
 <canvas id="matrix"></canvas>
 
-<div class="glitch" data-text="KAYDENZO">KAYDENZO</div>
+<div class="access">ACCESS GRANTED ✓</div>
 
-<div class="terminal">
+<img class="avatar fade" src="https://i.ibb.co/3mV8Z6T/hacker-face.jpg">
+
+<div class="glitch fade" data-text="KAYDENZO">KAYDENZO</div>
+
+<div class="terminal fade">
   <div class="running-text">
-    "Hati ini tidak hancur hanya kehabisan tempat untuk berharap."
+    > "My heart isn't broken — it simply stopped waiting for the wrong things for too long."
   </div>
+
   <br><br>
-  <div>
-    > Status: ACTIVE <br>
-    > Role: Coder, Bot Developer, Digital Explorer <br>
+
+  <div class="info-grid">
+    <div>> Status:</div> <div id="status"></div>
+    <div>> Role:</div> <div id="role"></div>
   </div>
 </div>
 
-<div class="terminal">
+<div class="terminal fade">
   <h3>> Social Links</h3>
   <p>GitHub: <a href="https://github.com/kaydenzolucy">kaydenzolucy</a></p>
   <p>Telegram: <a href="https://t.me/hkig899">hkig899</a></p>
 </div>
 
-<div class="footer">
+<div class="footer fade">
   © 2025 Kaydenzo Underground Network
 </div>
 
@@ -166,6 +205,40 @@ function draw() {
 }
 
 setInterval(draw, 33);
+
+/* ===== TYPING EFFECT ===== */
+const statusText = "ACTIVE";
+const roleText = "Coder — Bot Developer — Digital Explorer";
+
+let i = 0, j = 0;
+const st = document.getElementById("status");
+const rl = document.getElementById("role");
+
+const beep = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
+
+function typeStatus() {
+  if (i < statusText.length) {
+    st.innerHTML += statusText.charAt(i);
+    beep.volume = 0.2;
+    beep.play();
+    i++;
+    setTimeout(typeStatus, 70);
+  } else {
+    setTimeout(typeRole, 200);
+  }
+}
+
+function typeRole() {
+  if (j < roleText.length) {
+    rl.innerHTML += roleText.charAt(j);
+    beep.volume = 0.1;
+    beep.play();
+    j++;
+    setTimeout(typeRole, 50);
+  }
+}
+
+setTimeout(typeStatus, 1000);
 </script>
 
 </body>
