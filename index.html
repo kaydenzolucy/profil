@@ -16,11 +16,36 @@ body {
   overflow-x: hidden;
 }
 
+/* ===== LOADING SCREEN ===== */
+#loading {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 9999;
+  color: #00ff9c;
+  font-size: 18px;
+}
+
+.loading-text {
+  border-right: 2px solid #00ff9c;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+  animation: typing 2.8s steps(40) forwards, blink .7s infinite;
+}
+
+@keyframes typing { from { width: 0; } to { width: 270px; } }
+@keyframes blink { 50% { border-color: transparent; } }
+
 /* ===== MATRIX BACKGROUND ===== */
 canvas {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   z-index: -1;
   width: 100%;
   height: 100%;
@@ -36,47 +61,19 @@ canvas {
   color: #00ff9c;
   text-shadow: 0 0 12px #00ff9c;
 }
-.glitch:before,
-.glitch:after {
-  content: attr(data-text);
-  position: absolute;
-  left: 0;
-  width: 100%;
-}
-.glitch:before {
-  left: 2px;
-  text-shadow: -2px 0 red;
-  clip: rect(12px, 9999px, 50px, 0);
-  animation: glitch1 1s infinite linear alternate-reverse;
-}
-.glitch:after {
-  left: -2px;
-  text-shadow: -2px 0 blue;
-  clip: rect(85px, 9999px, 140px, 0);
-  animation: glitch2 1s infinite linear alternate-reverse;
-}
-
-@keyframes glitch1 {
-  0% { clip: rect(0, 9999px, 30px, 0); }
-  100% { clip: rect(70px, 9999px, 140px, 0); }
-}
-@keyframes glitch2 {
-  0% { clip: rect(5px, 9999px, 40px, 0); }
-  100% { clip: rect(110px, 9999px, 160px, 0); }
-}
 
 /* ===== TERMINAL BOX ===== */
 .terminal {
   width: 85%;
   margin: 40px auto;
   border: 1px solid #00ff9c;
-  border-radius: 6px;
   padding: 20px;
+  border-radius: 6px;
   box-shadow: 0 0 15px #00ff9c;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0,0,0,0.7);
 }
 
-/* ===== CLEAN ALIGN TEXT ===== */
+/* ===== INFO GRID ===== */
 .info-grid {
   display: grid;
   grid-template-columns: 120px auto;
@@ -84,26 +81,36 @@ canvas {
   font-size: 18px;
 }
 
-/* ===== RUNNING QUOTE ===== */
-.running-text {
-  font-size: 18px;
-  white-space: nowrap;
+/* ===== FIXED RUNNING TEXT ===== */
+.running-box {
+  width: 100%;
   overflow: hidden;
-  box-sizing: border-box;
-  animation: slide 15s linear infinite;
+  position: relative;
 }
 
-@keyframes slide {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+.running-text {
+  display: inline-block;
+  white-space: nowrap;
+  padding-left: 100%;
+  animation: marquee 15s linear infinite;
+  font-size: 18px;
 }
 
-a {
-  color: #00ff9c;
-  text-decoration: none;
+@keyframes marquee {
+  from { transform: translateX(0%); }
+  to   { transform: translateX(-100%); }
 }
-a:hover {
-  text-shadow: 0 0 20px white;
+
+/* ===== TERMINAL MENU ===== */
+.menu {
+  margin-top: 15px;
+}
+.menu div {
+  cursor: pointer;
+  padding: 6px 0;
+}
+.menu div:hover {
+  text-shadow: 0 0 10px white;
 }
 
 /* FOOTER */
@@ -116,13 +123,22 @@ a:hover {
 </head>
 <body>
 
+<!-- LOADING SCREEN -->
+<div id="loading">
+  <div class="loading-text" id="loadingText"></div>
+</div>
+
 <canvas id="matrix"></canvas>
 
-<div class="glitch" data-text="KAYDENZO">KAYDENZO</div>
+<div class="glitch">KAYDENZO</div>
 
 <div class="terminal">
-  <div class="running-text">
-    > "My heart isn't broken — it simply stopped waiting for the wrong things for too long."
+  <div class="running-box">
+    <div class="running-text">
+      > "My heart isn't broken — it simply stopped waiting for the wrong things for too long. "
+      &nbsp;&nbsp;&nbsp;
+      > "My heart isn't broken — it simply stopped waiting for the wrong things for too long."
+    </div>
   </div>
 
   <br><br>
@@ -130,6 +146,15 @@ a:hover {
   <div class="info-grid">
     <div>> Status:</div> <div>ACTIVE</div>
     <div>> Role:</div> <div>Coder — Bot Developer — Digital Explorer</div>
+  </div>
+
+  <br>
+
+  <h3>> Interactive Terminal Menu</h3>
+  <div class="menu">
+    <div onclick="openLink('github')">[1] Open GitHub</div>
+    <div onclick="openLink('telegram')">[2] Open Telegram</div>
+    <div onclick="showAbout()">[3] About Me</div>
   </div>
 </div>
 
@@ -144,7 +169,30 @@ a:hover {
 </div>
 
 <script>
-/* ===== MATRIX RAIN EFFECT ===== */
+/* ===== LOADING SEQUENCE ===== */
+const loadText = [
+  "Initializing system...",
+  "Bypassing encryption...",
+  "Decrypting identity...",
+  "ACCESS GRANTED ✓"
+];
+
+let i = 0;
+
+function typeLoading() {
+  if (i < loadText.length) {
+    document.getElementById("loadingText").innerHTML = loadText[i];
+    i++;
+    setTimeout(typeLoading, 900);
+  } else {
+    setTimeout(() => {
+      document.getElementById("loading").style.display = "none";
+    }, 400);
+  }
+}
+typeLoading();
+
+/* ===== MATRIX EFFECT ===== */
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 
@@ -155,26 +203,41 @@ const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>/*-+=@#$%&";
 const fontSize = 16;
 const columns = canvas.width / fontSize;
 const drops = [];
-
 for (let i = 0; i < columns; i++) drops[i] = 1;
 
 function draw() {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+  ctx.fillStyle = "rgba(0,0,0,0.08)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
   ctx.fillStyle = "#00ff9c";
   ctx.font = fontSize + "px monospace";
 
   for (let i = 0; i < drops.length; i++) {
-    const text = chars[Math.floor(Math.random() * chars.length)];
+    const text = chars[Math.floor(Math.random()*chars.length)];
     ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
     if (drops[i] * fontSize > canvas.height && Math.random() > 0.965) drops[i] = 0;
     drops[i]++;
   }
 }
-
 setInterval(draw, 33);
+
+/* ===== TERMINAL MENU ===== */
+function openLink(type) {
+  playBeep();
+  if (type === "github") window.location.href = "https://github.com/kaydenzolucy";
+  if (type === "telegram") window.location.href = "https://t.me/hkig899";
+}
+
+function showAbout() {
+  playBeep();
+  alert("Kaydenzo — Digital Explorer & Code Engineer.");
+}
+
+/* ===== SOUND ===== */
+function playBeep() {
+  const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+  audio.volume = 0.3;
+  audio.play();
+}
 </script>
 
 </body>
