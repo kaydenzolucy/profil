@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Kaydenzo — Underground Profile</title>
+
 <style>
   :root{
     --neon:#00ff9c;
@@ -14,7 +15,7 @@
   html,body{height:100%;margin:0;background:var(--bg);font-family:"Courier New",monospace;color:var(--neon);-webkit-font-smoothing:antialiased}
   a{color:var(--neon);text-decoration:none}
 
-  /* --- heavy glitch name --- */
+  /* --- glitch --- */
   .hero{padding-top:48px;text-align:center;user-select:none}
   .glitch{
     position:relative;
@@ -32,54 +33,57 @@
     pointer-events:none;
     mix-blend-mode:screen;
   }
-  .glitch::before{color:var(--danger);left:3px;filter:blur(.6px);animation: g1 700ms infinite linear;}
-  .glitch::after{color:var(--accent);left:-3px;filter:blur(.8px);animation: g2 900ms infinite linear;}
+  .glitch::before{color:var(--danger);left:3px;filter:blur(.6px);animation:g1 700ms infinite linear;}
+  .glitch::after{color:var(--accent);left:-3px;filter:blur(.8px);animation:g2 900ms infinite linear;}
 
   @keyframes glitchShift{
     0%{transform:translateX(0) skewX(0)}
-    20%{transform:translateX(-1px) skewX(-.2deg)}
-    40%{transform:translateX(2px) skewX(.2deg)}
-    60%{transform:translateX(-1px)}
-    80%{transform:translateX(1px) skewX(-.1deg)}
+    35%{transform:translateX(-1px) skewX(-.3deg)}
+    70%{transform:translateX(2px) skewX(.4deg)}
     100%{transform:translateX(0)}
   }
-  @keyframes g1{0%{clip:rect(0,9999px,10px,0)}50%{clip:rect(40px,9999px,60px,0)}100%{clip:rect(0,9999px,10px,0)}}
-  @keyframes g2{0%{clip:rect(20px,9999px,40px,0)}50%{clip:rect(70px,9999px,100px,0)}100%{clip:rect(20px,9999px,40px,0)}}
+  @keyframes g1{0%{clip:rect(0,9999px,12px,0)}50%{clip:rect(40px,9999px,60px,0)}100%{clip:rect(0,9999px,12px,0)}}
+  @keyframes g2{0%{clip:rect(25px,9999px,45px,0)}50%{clip:rect(75px,9999px,100px,0)}100%{clip:rect(25px,9999px,45px,0)}}
 
-  /* --- main card --- */
+  /* card */
   .card{max-width:960px;margin:18px auto;padding:18px;border-radius:10px;background:rgba(0,0,0,.55);border:1px solid rgba(0,255,156,.06);box-shadow:0 8px 40px rgba(0,255,156,.04)}
   .running{overflow:hidden;border-bottom:1px dashed rgba(0,255,156,.06);padding:12px 0}
   .marquee{display:inline-block;white-space:nowrap;padding-left:100%;animation:marq 18s linear infinite}
+
   @keyframes marq{from{transform:translateX(0)}to{transform:translateX(-100%)}}
 
   .grid{display:grid;grid-template-columns:120px 1fr;gap:6px;margin-top:12px;align-items:center}
-
   .menu{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
   .btn{background:transparent;border:1px solid rgba(0,255,156,.08);padding:8px 12px;border-radius:8px;color:var(--neon);cursor:pointer}
   .btn:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,255,156,.06)}
   .small{font-size:13px;opacity:.8}
 
-  /* --- terminal --- */
+  /* terminal */
   #cmdWindow{margin:18px auto;background:rgba(0,0,0,.45);border-radius:8px;padding:12px;border:1px solid rgba(0,255,156,.04);max-width:960px}
   #cmdOutput{height:160px;overflow:auto;padding:8px;background:rgba(0,0,0,.25);border-radius:6px;border:1px solid rgba(0,255,156,.04);font-size:14px;line-height:18px;white-space:pre-wrap}
   #cmdInput{width:100%;margin-top:8px;padding:8px;background:transparent;border:none;border-bottom:1px solid rgba(0,255,156,.08);color:var(--neon);font-size:15px;outline:none}
 
-  .footer{text-align:center;margin:26px 0 60px;opacity:.6;font-size:13px}
-
-  /* --- modal accounts --- */
+  /* modal */
   .modal{position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.9);display:none;align-items:flex-start;padding-top:48px;z-index:99999}
   .modal-box{max-width:820px;margin:0 auto;background:#06110a;border-radius:10px;padding:14px;border:1px solid rgba(0,255,156,.08);box-shadow:0 30px 60px rgba(0,0,0,.6)}
   .acc-list{max-height:320px;overflow:auto;padding:6px;background:rgba(0,0,0,.25);border-radius:6px;border:1px solid rgba(0,255,156,.04);margin:8px 0}
   .acc-row{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:6px;border-bottom:1px dashed rgba(0,255,156,.03)}
-  .acc-row:last-child{border-bottom:none}
   .copy-btn{background:transparent;border:1px solid rgba(0,255,156,.06);padding:6px 8px;border-radius:6px;cursor:pointer;color:var(--neon)}
-  .text-muted{opacity:.8;font-size:13px;color:#9becc9}
 
+  .footer{text-align:center;margin:26px 0 60px;opacity:.6;font-size:13px}
+
+  /* responsive */
+  @media(max-width:620px){
+    .glitch{font-size:36px}
+    .card{margin:8px}
+    .marquee{animation-duration:28s}
+    .modal-box{width:92%}
+  }
 </style>
 </head>
 <body>
 
-<!-- hidden yt player -->
+<!-- hidden YouTube player -->
 <div id="ytPlayerWrap" style="position:fixed;left:-9999px;top:-9999px;visibility:hidden"></div>
 
 <section class="hero">
@@ -88,42 +92,39 @@
 
 <section class="card">
   <div class="running">
-    <div class="marquee">&gt; "My heart isn't broken — it simply stopped waiting for the wrong things for too long." — &nbsp;&gt; "Some feelings die quietly, but their ghosts stay forever." — &nbsp;&gt; "I don't hate; I simply preserved myself."</div>
+    <div class="marquee">
+      > "My heart isn't broken — it simply stopped waiting for the wrong things for too long." —
+      > "Some feelings die quietly, but their ghosts stay forever." —
+      > "I don't hate; I simply preserved myself."
+    </div>
   </div>
 
   <div class="grid">
-    <div>&gt; Status:</div><div id="statusText">ACTIVE</div>
-    <div>&gt; Role:</div><div id="roleText">Coder — Bot Dev — Digital Explorer</div>
+    <div>> Status:</div><div>ACTIVE</div>
+    <div>> Role:</div><div>Coder — Bot Dev — Digital Explorer</div>
   </div>
 
   <div class="menu">
     <button class="btn" id="openGit">Open GitHub</button>
     <button class="btn" id="openTg">Open Telegram</button>
-    <button class="btn" id="toggleMusic">Toggle Music</button>
-    <button class="btn" id="openViu">VIU Premium Free (Show Accounts)</button>
-    <button class="btn" id="clearCmd">Clear Terminal</button>
+    <button class="btn" id="openViu">VIU Premium Accounts</button>
   </div>
 
-  <div class="small text-muted">Tip: Click once anywhere to unlock sound.</div>
 </section>
 
 <section id="cmdWindow">
-  <h3>&gt; Terminal Access</h3>
+  <h3>> Terminal Access</h3>
   <div id="cmdOutput"></div>
-  <input id="cmdInput" placeholder="Type command (help, whoami, social, viu, clear)" />
+  <input id="cmdInput" placeholder="Type command (help, viu, whoami, social, clear)" />
 </section>
 
-<!-- modal -->
+<!-- modal viu -->
 <div id="modal" class="modal">
   <div class="modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center">
-      <strong>VIU Premium - Sample Accounts</strong>
+      <strong>VIU Premium - Accounts</strong>
       <button class="btn" id="closeModal">Close</button>
     </div>
-
-    <p class="text-muted">Display only accounts you own/have permission.</p>
-
-    <textarea id="accInput" style="width:100%;height:80px;background:#000;color:var(--neon);border:1px solid rgba(0,255,156,.06);padding:8px;border-radius:6px"></textarea>
 
     <div class="acc-list" id="accList"></div>
   </div>
@@ -132,7 +133,7 @@
 <div class="footer">© 2025 Kaydenzo Underground Network</div>
 
 <script>
-/* INITIAL ACCOUNTS */
+/* base accounts */
 let accounts = [
   "TommieClure@gmail.com:kaydenzo123",
   "SergioCoghlan@gmail.com:kaydenzo123",
@@ -141,120 +142,82 @@ let accounts = [
   "DarellGarica@gmail.com:kaydenzo123"
 ];
 
-/* AUDIO FX */
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
-const audioCtx = AudioCtx ? new AudioCtx() : null;
-
-function clickFx(){
-  if(!audioCtx) return;
-  const o = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  o.type='sine'; o.frequency.value=880; g.gain.value=0.02;
-  o.connect(g); g.connect(audioCtx.destination);
-  o.start(); setTimeout(()=>{o.stop()},80);
-}
-
-function cmdFx(){
-  if(!audioCtx) return;
-  const o = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  o.type='triangle'; o.frequency.value=520; g.gain.value=0.03;
-  o.connect(g); g.connect(audioCtx.destination);
-  o.start(); setTimeout(()=>{o.stop()},140);
-}
-
-document.addEventListener('click',()=>audioCtx?.resume(),{once:true});
-
-/* RENDER ACCOUNTS */
-const accList=document.getElementById('accList');
+/* render account */
 function renderAccounts(){
-  accList.innerHTML="";
-  accounts.forEach((a,i)=>{
-    const row=document.createElement('div');
-    row.className='acc-row';
+  const wrap = document.getElementById("accList");
+  wrap.innerHTML = "";
+  accounts.forEach((acc,i)=>{
+    const row=document.createElement("div");
+    row.className="acc-row";
     row.innerHTML=`
-      <div>${i+1}. ${a}</div>
+      <div>${i+1}. ${acc}</div>
       <button class="copy-btn">Copy</button>
     `;
-    row.querySelector('.copy-btn').onclick=()=>{
-      navigator.clipboard.writeText(a);
-      clickFx();
+    row.querySelector("button").onclick=()=>{
+      navigator.clipboard.writeText(acc);
+      alert("Copied!");
     };
-    accList.appendChild(row);
+    wrap.appendChild(row);
   });
 }
 
-/* OPEN VIU MODAL */
-document.getElementById('openViu').onclick=()=>{
-  clickFx();
-  document.getElementById('accInput').value=accounts.join("\n");
+/* modal actions */
+document.getElementById("openViu").onclick=()=>{
   renderAccounts();
-  modal.style.display="flex";
+  document.getElementById("modal").style.display="flex";
+};
+document.getElementById("closeModal").onclick=()=>{
+  document.getElementById("modal").style.display="none";
 };
 
-/* CLOSE VIU */
-document.getElementById('closeModal').onclick=()=>{
-  clickFx();
-  modal.style.display="none";
-};
+/* terminal */
+const out=document.getElementById("cmdOutput");
+const inp=document.getElementById("cmdInput");
 
-/* TERMINAL */
-const out=document.getElementById('cmdOutput');
-const inp=document.getElementById('cmdInput');
-function put(msg){
-  out.textContent+=msg+"\n";
+function put(t){
+  out.textContent+=t+"\n";
   out.scrollTop=out.scrollHeight;
 }
-put("Welcome to Kaydenzo terminal. Type 'help'.");
 
-inp.addEventListener('keydown',e=>{
+put("Welcome to Kaydenzo Terminal. Type 'help'.");
+
+inp.addEventListener("keydown",e=>{
   if(e.key==="Enter"){
     const v=inp.value.trim();
-    if(!v) return;
+    if(!v)return;
     put("> "+v);
-    cmdFx();
-    if(v==="help") put("help\nwhoami\nsocial\nviu\nclear");
-    else if(v==="whoami") put("User: guest\nRole: Coder — Bot Dev — Digital Explorer");
+
+    if(v==="help") put("help, viu, whoami, social, clear");
+    else if(v==="viu"){ put("Opening VIU modal..."); document.getElementById("openViu").click(); }
+    else if(v==="whoami") put("User: guest\nRole: Coder — Bot Dev — Explorer");
     else if(v==="social") put("GitHub: github.com/kaydenzolucy\nTelegram: t.me/hkig899");
-    else if(v==="viu") document.getElementById('openViu').click();
     else if(v==="clear") out.textContent="";
-    else put("Unknown command.");
+    else put("Unknown command");
+
     inp.value="";
   }
 });
 
-/* CLEAR TERMINAL BUTTON */
-document.getElementById('clearCmd').onclick=()=>{clickFx(); out.textContent="";};
-
-/* YOUTUBE PLAYER */
+/* youtube autoplay (no button needed) */
 let ytPlayer;
 function onYouTubeIframeAPIReady(){
-  ytPlayer = new YT.Player("ytPlayerWrap",{
-    height:"10",
-    width:"10",
+  ytPlayer=new YT.Player("ytPlayerWrap",{
     videoId:"jgIpq1mJ_2Y",
-    playerVars:{autoplay:1,controls:0,loop:1,playlist:"jgIpq1mJ_2Y"},
-    events:{onReady:(e)=>{e.target.mute(); e.target.playVideo();}}
+    playerVars:{autoplay:1,controls:0,loop:1,playlist:"jgIpq1mJ_2Y",modestbranding:1},
+    events:{
+      onReady:(e)=>{
+        e.target.setVolume(45);
+        e.target.playVideo();
+      }
+    }
   });
 }
 
-let musicMuted=true;
-document.getElementById('toggleMusic').onclick=()=>{
-  clickFx();
-  if(!ytPlayer) return alert("Player loading...");
-  if(musicMuted){
-    ytPlayer.unMute(); ytPlayer.setVolume(40);
-    musicMuted=false;
-  } else {
-    ytPlayer.mute();
-    musicMuted=true;
-  }
-};
-
-/* LOAD YT API */
-let s=document.createElement("script");
-s.src="https://www.youtube.com/iframe_api";
-document.head.appendChild(s);
+(function loadYT(){
+  const s=document.createElement("script");
+  s.src="https://www.youtube.com/iframe_api";
+  document.head.appendChild(s);
+})();
 </script>
 
 </body>
