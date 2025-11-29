@@ -1,379 +1,489 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Kaydenzo — Underground Profile</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
+<meta charset="utf-8" />
+<title>Kaydenzo — Underground Profile (Hybrid Pro)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <style>
-/* ===== GLOBAL ===== */
-body {
-  margin: 0;
-  padding: 0;
-  background: #000;
-  font-family: "Courier New", monospace;
-  color: #00ff9c;
-  overflow-x: hidden;
-}
+  /* ---------- GLOBAL ---------- */
+  :root{
+    --neon: #00ff9c;
+    --bg:#000;
+    --glass: rgba(0,0,0,0.55);
+  }
+  html,body{height:100%;margin:0;background:var(--bg);font-family: "Courier New", monospace;color:var(--neon);-webkit-font-smoothing:antialiased;}
+  a{color:var(--neon);text-decoration:none}
+  /* hide default focus outlines but keep accessibility via custom */
+  :focus{outline:2px dashed rgba(0,255,156,0.15)}
 
-/* ===== BOOT SEQUENCE ===== */
-#boot {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: #000;
-  color: #00ff9c;
-  padding: 20px;
-  font-size: 16px;
-  z-index: 99999;
-}
-.boot-line {
-  opacity: 0;
-  animation: bootFade 0.5s forwards;
-}
-@keyframes bootFade { to { opacity: 1; } }
+  /* ---------- BOOT & LOADING ---------- */
+  #boot, #loading {
+    position:fixed;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;z-index:99999;
+  }
+  #boot{background:#000;padding:18px;color:var(--neon);font-size:15px}
+  .boot-line{opacity:0;margin:4px 0;white-space:nowrap;animation:bootFade .6s forwards}
+  @keyframes bootFade{to{opacity:1}}
+  #loading{background:#000;display:none;color:var(--neon);font-size:18px}
+  .loading-text{border-right:2px solid var(--neon);padding-right:6px;white-space:nowrap;overflow:hidden;width:0;animation:typing 2.6s steps(40) forwards, blink .8s infinite}
+  @keyframes typing{from{width:0}to{width:300px}}
+  @keyframes blink{50%{border-color:transparent}}
 
-/* ===== LOADING SCREEN ===== */
-#loading {
-  position: fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background:#000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  z-index:9999;
-  color:#00ff9c;
-  font-size:18px;
-  display:none;
-}
+  /* ---------- CANVASES LAYERS ---------- */
+  .layer-canvas{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none}
+  #matrix-back{opacity:.25;filter:blur(2px)}
+  #matrix-mid{opacity:.6}
+  #matrix-front{opacity:1}
 
-.loading-text {
-  border-right: 2px solid #00ff9c;
-  white-space: nowrap;
-  overflow: hidden;
-  width: 0;
-  animation: typing 2.8s steps(40) forwards, blink .7s infinite;
-}
+  /* ---------- GLITCH NAME (PARALLAX) ---------- */
+  .hero{
+    text-align:center;padding-top:58px;pointer-events:auto;
+    transform-style:preserve-3d;
+  }
+  .glitch {
+    display:inline-block;
+    position:relative;
+    font-size:56px;
+    font-weight:900;
+    color:var(--neon);
+    text-shadow:0 0 16px rgba(0,255,156,.25);
+    transition:transform .12s linear;
+    user-select:none;
+  }
+  .glitch::before,.glitch::after{
+    content:attr(data-text);
+    position:absolute;left:0;top:0;
+    width:100%;height:100%;
+    pointer-events:none;
+    mix-blend-mode:screen;
+  }
+  .glitch::before{color:#ff2b2b;left:3px;transform:translateY(-2px);opacity:.9;filter:blur(.4px)}
+  .glitch::after{color:#2be7ff;left:-3px;transform:translateY(1px);opacity:.9;filter:blur(.6px)}
+  .glitch:hover{transform:scale(1.02) rotate(-.4deg)}
 
-@keyframes typing { from { width: 0; } to { width: 260px; } }
-@keyframes blink { 50% { border-color: transparent; } }
+  /* ---------- MAIN TERMINAL CARD ---------- */
+  .card{
+    width:92%;max-width:920px;margin:22px auto;padding:18px;border-radius:10px;
+    background:linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.42));
+    border:1px solid rgba(0,255,156,.12);
+    box-shadow:0 8px 40px rgba(0,255,156,.06);
+    backdrop-filter: blur(6px);
+  }
 
-/* ===== MATRIX BACKGROUND (2 LAYER) ===== */
-canvas {
-  position: fixed;
-  top: 0; left: 0;
-  z-index: -1;
-  width: 100%; height: 100%;
-}
+  /* running quote */
+  .running-wrap{overflow:hidden;position:relative;border-bottom:1px dashed rgba(0,255,156,.06);padding-bottom:12px}
+  .running { white-space:nowrap; display:inline-block; padding-left:100%; font-size:18px; animation:marquee 22s linear infinite; }
+  @keyframes marquee{from{transform:translateX(0)} to{transform:translateX(-100%)}}
 
-/* ===== GLITCH NAME ===== */
-.glitch {
-  font-size: 55px;
-  text-align:center;
-  margin-top:70px;
-  position:relative;
-  color:#00ff9c;
-  text-shadow:0 0 12px #00ff9c;
-}
-.glitch::before,
-.glitch::after {
-  content:attr(data-text);
-  position:absolute;
-  left:0;
-  width:100%;
-}
-.glitch::before {
-  left:2px;
-  text-shadow:-2px 0 red;
-  animation:glitch1 0.9s infinite linear alternate-reverse;
-}
-.glitch::after {
-  left:-2px;
-  text-shadow:-2px 0 blue;
-  animation:glitch2 1s infinite linear alternate-reverse;
-}
+  /* info grid */
+  .info-grid{display:grid;grid-template-columns:120px 1fr;gap:6px;margin-top:14px;font-size:17px;align-items:center}
+  .info-grid div:first-child{opacity:.9}
 
-@keyframes glitch1 {
-  0% { clip:rect(0,9999px,25px,0); }
-  100% { clip:rect(60px,9999px,120px,0); }
-}
-@keyframes glitch2 {
-  0% { clip:rect(20px,9999px,55px,0); }
-  100% { clip:rect(90px,9999px,140px,0); }
-}
+  /* menu */
+  .menu{margin-top:12px;display:flex;gap:12px;flex-wrap:wrap}
+  .btn{background:transparent;border:1px solid rgba(0,255,156,.08);padding:8px 12px;border-radius:8px;cursor:pointer;color:var(--neon);transition:all .12s}
+  .btn:hover{transform:translateY(-3px);box-shadow:0 6px 30px rgba(0,255,156,.06);border-color:rgba(0,255,156,.28)}
 
-/* ===== TERMINAL BOX ===== */
-.terminal {
-  width:85%;
-  margin:40px auto;
-  border:1px solid #00ff9c;
-  border-radius:6px;
-  padding:20px;
-  background:rgba(0,0,0,0.6);
-  box-shadow:0 0 15px #00ff9c;
-}
+  /* command terminal */
+  #cmdWindow{margin:18px auto;background:rgba(0,0,0,.55);border-radius:8px;padding:12px;border:1px solid rgba(0,255,156,.06);max-width:920px}
+  #cmdOutput{height:180px;overflow:auto;padding:8px;background:rgba(0,0,0,.25);border-radius:6px;border:1px solid rgba(0,255,156,.04);font-size:14px;line-height:18px;white-space:pre-wrap}
+  #cmdInput{width:100%;margin-top:8px;padding:8px;background:transparent;border:none;border-bottom:1px solid rgba(0,255,156,.08);color:var(--neon);font-size:15px;outline:none}
 
-/* RUNNING TEXT */
-.running-box {
-  width:100%;
-  overflow:hidden;
-  position:relative;
-}
-.running-text {
-  display:inline-block;
-  white-space:nowrap;
-  padding-left:100%;
-  animation:marquee 15s linear infinite;
-  font-size:18px;
-}
-@keyframes marquee {
-  from { transform:translateX(0%); }
-  to   { transform:translateX(-100%); }
-}
+  /* fake cracking overlay */
+  #crackerOverlay{position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.92);display:none;z-index:100000;color:var(--neon);padding:18px;overflow:auto}
+  .crackerBox{max-width:900px;margin:40px auto;font-size:14px;line-height:20px;white-space:pre-wrap}
 
-/* ===== TERMINAL MENU ===== */
-.menu div {
-  cursor:pointer;
-  padding:6px 0;
-}
-.menu div:hover {
-  color:white;
-  text-shadow:0 0 15px white;
-}
+  /* neon cursor */
+  *{cursor:none}
+  .fake-cursor{position:fixed;width:18px;height:18px;border-radius:50%;background:transparent;border:2px solid var(--neon);box-shadow:0 0 18px rgba(0,255,156,.7);pointer-events:none;z-index:999999}
 
-/* ===== INTERACTIVE COMMAND TERMINAL ===== */
-#cmdWindow {
-  width:85%;
-  margin:40px auto;
-  border:1px solid #00ff9c;
-  border-radius:6px;
-  padding:20px;
-  background:rgba(0,0,0,0.6);
-  box-shadow:0 0 15px #00ff9c;
-}
-#cmdOutput {
-  height:180px;
-  overflow-y:auto;
-  font-size:15px;
-  white-space:pre-wrap;
-  line-height:20px;
-}
-#cmdInput {
-  width:100%;
-  margin-top:10px;
-  background:#000;
-  border:none;
-  border-bottom:1px solid #00ff9c;
-  color:#00ff9c;
-  font-size:16px;
-  outline:none;
-}
+  /* footer */
+  .footer{opacity:.65;text-align:center;margin:28px 0 60px;font-size:13px}
 
-/* FOOTER */
-.footer {
-  text-align:center;
-  margin-top:40px;
-  opacity:0.7;
-}
+  /* responsive */
+  @media (max-width:600px){
+    .glitch{font-size:40px}
+    .info-grid{grid-template-columns:100px 1fr;font-size:15px}
+    #cmdOutput{height:140px}
+  }
 </style>
 </head>
 <body>
 
-<!-- BOOT SEQUENCE -->
-<div id="boot"></div>
+<!-- BOOT -->
+<div id="boot" aria-hidden="true"></div>
 
 <!-- LOADING -->
-<div id="loading">
+<div id="loading" aria-hidden="true" style="display:none">
   <div class="loading-text" id="loadingText"></div>
 </div>
 
-<!-- MATRIX BG -->
-<canvas id="matrix"></canvas>
+<!-- MATRIX LAYERS -->
+<canvas id="matrix-back" class="layer-canvas"></canvas>
+<canvas id="matrix-mid" class="layer-canvas"></canvas>
+<canvas id="matrix-front" class="layer-canvas"></canvas>
 
-<div class="glitch" data-text="KAYDENZO">KAYDENZO</div>
+<!-- NEON CURSOR -->
+<div id="fakeCursor" class="fake-cursor" aria-hidden="true"></div>
 
-<div class="terminal">
-  <div class="running-box">
-    <div class="running-text">
-      > "My heart isn't broken — it simply stopped waiting for the wrong things for too long." 
-      &nbsp;&nbsp;
-      > "Some feelings die quietly, but their ghosts stay forever."
+<!-- HERO NAME -->
+<section class="hero" aria-label="Profile">
+  <div class="glitch" data-text="KAYDENZO">KAYDENZO</div>
+</section>
+
+<!-- MAIN CARD -->
+<section class="card" role="region" aria-label="Profile card">
+  <div class="running-wrap" aria-hidden="false">
+    <div class="running">
+      &gt; "My heart isn't broken — it simply stopped waiting for the wrong things for too long." — &nbsp;
+      &gt; "Some feelings die quietly, but their ghosts stay forever." — &nbsp;
+      &gt; "I don't hate; I just don't return the warmth I once did."
     </div>
   </div>
 
-  <br><br>
-
-  <div class="info-grid">
-    <div>> Status:</div> <div>ACTIVE</div>
-    <div>> Role:</div> <div>Coder — Bot Dev — Digital Explorer</div>
+  <div class="info-grid" style="margin-top:14px">
+    <div>&gt; Status:</div><div id="statusText">ACTIVE</div>
+    <div>&gt; Role:</div><div id="roleText">Coder — Bot Developer — Digital Explorer</div>
   </div>
 
-  <br>
-  <h3>> Interactive Menu</h3>
-  <div class="menu">
-    <div onclick="openLink('github')">[1] GitHub</div>
-    <div onclick="openLink('telegram')">[2] Telegram</div>
-    <div onclick="showAbout()">[3] About</div>
+  <div class="menu" role="navigation" aria-label="Quick menu">
+    <button class="btn" id="btnGit">[1] GitHub</button>
+    <button class="btn" id="btnTel">[2] Telegram</button>
+    <button class="btn" id="btnAbout">[3] About</button>
+    <button class="btn" id="btnCrack">[4] Crack Demo</button>
+    <button class="btn" id="btnScan">[5] Scan Device</button>
+    <button class="btn" id="btnYT">[6] YT → MP3 (API)</button>
   </div>
-</div>
+</section>
 
 <!-- COMMAND TERMINAL -->
-<div id="cmdWindow">
-  <h3>> Terminal Access</h3>
-  <div id="cmdOutput"></div>
-  <input id="cmdInput" placeholder="Type a command (help, whoami, social, clear)">
+<section id="cmdWindow" aria-label="Interactive terminal">
+  <h3 style="margin:6px 0 8px"> &gt; Terminal Access</h3>
+  <div id="cmdOutput" aria-live="polite"></div>
+  <input id="cmdInput" placeholder="Type a command (help, whoami, social, scan, clear, theme)" aria-label="Command input" />
+</section>
+
+<!-- CRACK OVERLAY -->
+<div id="crackerOverlay" role="dialog" aria-hidden="true">
+  <div class="crackerBox" id="crackerBox"></div>
+  <div style="text-align:center;margin-top:18px">
+    <button class="btn" id="closeCrack">Close</button>
+  </div>
 </div>
 
-<div class="footer">
-  © 2025 Kaydenzo Underground Network
-</div>
+<div class="footer">© 2025 Kaydenzo Underground Network — press <strong>Ctrl+K</strong> for secret menu</div>
 
 <script>
-/* =====================================================
+/* ======================================================
+   UTILITIES: audio (WebAudio for ambient & sfx) - no external music required
+   ====================================================== */
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+const audioCtx = AudioCtx ? new AudioCtx() : null;
+
+function playBeep(freq=880, duration=0.06, vol=0.05){
+  if(!audioCtx) return;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.frequency.value = freq;
+  o.type='sine';
+  g.gain.value = vol;
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start();
+  setTimeout(()=>{ o.stop(); o.disconnect(); g.disconnect(); }, duration*1000);
+}
+
+/* Ambient drone using oscillator + noise */
+let ambientGainNode=null;
+function startAmbient(){
+  if(!audioCtx || ambientGainNode) return;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = 'sine';
+  o.frequency.value = 110; // low drone
+  g.gain.value = 0.0025; // very low volume
+  o.connect(g);
+  g.connect(audioCtx.destination);
+  o.start();
+
+  // gentle noise (script)
+  const bufferSize = 2 * audioCtx.sampleRate;
+  const noise = audioCtx.createBufferSource();
+  const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for(let i=0;i<bufferSize;i++) data[i] = (Math.random()*2-1)*0.0012;
+  noise.buffer = buffer; noise.loop = true;
+  const noiseG = audioCtx.createGain(); noiseG.gain.value = 0.0006;
+  noise.connect(noiseG); noiseG.connect(audioCtx.destination);
+  noise.start();
+
+  ambientGainNode = {osc:o, noise:noise, g:g, noiseG:noiseG};
+}
+function stopAmbient(){ if(!ambientGainNode) return; ambientGainNode.osc.stop(); ambientGainNode.noise.stop(); ambientGainNode.g.disconnect(); ambientGainNode.noiseG.disconnect(); ambientGainNode=null; }
+
+/* Kick audio context on user interaction for autoplay policies */
+function unlockAudio(){ if(!audioCtx) return; if(audioCtx.state === 'suspended') audioCtx.resume(); startAmbient(); document.removeEventListener('click', unlockAudio); }
+document.addEventListener('click', unlockAudio, {once:true});
+
+/* ======================================================
    BOOT SEQUENCE
-===================================================== */
-const boot = [
-"[BOOT] Initializing Kaydenzo Network...",
-"[BOOT] Loading modules...",
-"[BOOT] Establishing secure link...",
-"[BOOT] Checking environment...",
-"[BOOT] Verifying identity hash...",
-"[OK] Access Granted. Welcome back."
+   ====================================================== */
+const bootLines = [
+  "[BOOT] Initializing Kaydenzo Network...",
+  "[BOOT] Loading modules...",
+  "[BOOT] Establishing secure link...",
+  "[BOOT] Checking environment...",
+  "[BOOT] Verifying identity hash...",
+  "[OK] Access Granted. Welcome back."
 ];
-
-let b = 0;
-function bootNext() {
-  if (b < boot.length) {
-    const line = document.createElement("div");
-    line.className = "boot-line";
-    line.style.animationDelay = (b * 0.4) + "s";
-    line.innerText = boot[b];
-    document.getElementById("boot").appendChild(line);
-    b++;
-    setTimeout(bootNext, 300);
+const bootRoot = document.getElementById('boot');
+let bi = 0;
+function bootIter(){
+  if(bi < bootLines.length){
+    const d = document.createElement('div');
+    d.className='boot-line';
+    d.style.animationDelay = (bi*0.3)+'s';
+    d.textContent = bootLines[bi];
+    bootRoot.appendChild(d);
+    bi++;
+    setTimeout(bootIter, 400);
   } else {
-    setTimeout(() => {
-      document.getElementById("boot").style.display="none";
-      document.getElementById("loading").style.display="flex";
-      typeLoading();
-    }, 2000);
+    setTimeout(()=>{ bootRoot.style.display='none'; startLoading();}, 900);
   }
 }
-bootNext();
+bootIter();
 
-/* =====================================================
-   LOADING SCREEN
-===================================================== */
-const loadText = [
-  "Decrypting system...",
-  "Loading interface...",
-  "Finalizing UI...",
-  "ACCESS GRANTED ✓"
-];
-let lt = 0;
-
-function typeLoading() {
-  if (lt < loadText.length) {
-    document.getElementById("loadingText").innerHTML = loadText[lt];
-    lt++;
-    setTimeout(typeLoading, 900);
-  } else {
-    setTimeout(() => {
-      document.getElementById("loading").style.display = "none";
-    }, 400);
+/* LOADING */
+const loadSteps = ["Decrypting system...","Loading interface...","Finalizing UI...","ACCESS GRANTED ✓"];
+let li = 0;
+function startLoading(){
+  document.getElementById('loading').style.display='flex';
+  const loadingText = document.getElementById('loadingText');
+  function step(){
+    if(li < loadSteps.length){
+      loadingText.textContent = loadSteps[li++];
+      playBeep(900,0.06,0.05);
+      setTimeout(step, 800);
+    } else {
+      setTimeout(()=>{ document.getElementById('loading').style.display='none'; startAmbient(); }, 500);
+    }
   }
+  step();
 }
 
-/* =====================================================
-   MATRIX EFFECT
-===================================================== */
-const canvas = document.getElementById("matrix");
-const ctx = canvas.getContext("2d");
-
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
-
+/* ======================================================
+   MATRIX (3 layered canvases)
+   ====================================================== */
+function makeMatrix(canvasId, fontSize, speed, alpha, chars){
+  const c = document.getElementById(canvasId);
+  const ctx = c.getContext('2d');
+  function resize(){ c.width = innerWidth; c.height = innerHeight; columns = Math.floor(c.width / fontSize); drops = new Array(columns).fill(1); }
+  let columns, drops;
+  resize();
+  window.addEventListener('resize', resize);
+  ctx.font = fontSize + 'px monospace';
+  function draw(){
+    ctx.fillStyle = 'rgba(0,0,0,0.06)';
+    ctx.fillRect(0,0,c.width,c.height);
+    ctx.fillStyle = `rgba(0,255,156,${alpha})`;
+    ctx.font = fontSize + 'px monospace';
+    for(let i=0;i<drops.length;i++){
+      const txt = chars.charAt(Math.floor(Math.random()*chars.length));
+      ctx.fillText(txt, i*fontSize, drops[i]*fontSize);
+      if(drops[i]*fontSize > c.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i] += Math.random()*speed;
+    }
+  }
+  setInterval(draw, 33);
+}
 const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>/*-+=@#$%&";
-const fontSize = 16;
-const columns = canvas.width / fontSize;
-const drops = [];
-for (let i = 0; i < columns; i++) drops[i] = 1;
+makeMatrix('matrix-back', 18, 0.9, 0.18, chars);
+makeMatrix('matrix-mid', 16, 1.6, 0.36, chars);
+makeMatrix('matrix-front', 12, 2.6, 0.95, chars);
 
-function draw() {
-  ctx.fillStyle = "rgba(0,0,0,0.08)";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+/* ======================================================
+   NEON CURSOR (parallax & follow) + parallax name move
+   ====================================================== */
+const fakeCursor = document.getElementById('fakeCursor');
+document.addEventListener('mousemove', e=> {
+  fakeCursor.style.transform = `translate(${e.clientX - 9}px, ${e.clientY - 9}px)`;
+  // parallax on name
+  const g = document.querySelector('.glitch');
+  const cx = window.innerWidth/2;
+  const cy = window.innerHeight/2;
+  const dx = (e.clientX - cx)/cx;
+  const dy = (e.clientY - cy)/cy;
+  g.style.transform = `translate3d(${dx*6}px, ${dy*6}px, 0) rotate(${dx*0.7}deg)`;
+});
 
-  ctx.fillStyle = "#00ff9c";
-  ctx.font = fontSize + "px monospace";
+/* click sound for UI */
+document.addEventListener('click', ()=> playBeep(1200,0.04,0.03));
 
-  for (let i = 0; i < drops.length; i++) {
-    const text = chars[Math.floor(Math.random()*chars.length)];
-    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+/* ======================================================
+   INTERACTIVE MENU BUTTONS
+   ====================================================== */
+document.getElementById('btnGit').addEventListener('click', ()=> { playBeep(); window.open('https://github.com/kaydenzolucy','_blank') });
+document.getElementById('btnTel').addEventListener('click', ()=> { playBeep(); window.open('https://t.me/hkig899','_blank') });
+document.getElementById('btnAbout').addEventListener('click', ()=> { playBeep(); alert('Kaydenzo — Digital Explorer & Code Engineer.'); });
+document.getElementById('btnCrack').addEventListener('click', ()=> startCracker());
+document.getElementById('btnScan').addEventListener('click', ()=> runScan());
+document.getElementById('btnYT').addEventListener('click', ()=> openYTModule());
 
-    if (drops[i]*fontSize > canvas.height && Math.random() > 0.965) drops[i] = 0;
-    drops[i]++;
-  }
-}
-setInterval(draw, 33);
+/* ======================================================
+   INTERACTIVE CLI
+   ====================================================== */
+const cmdIn = document.getElementById('cmdInput');
+const cmdOut = document.getElementById('cmdOutput');
 
-/* =====================================================
-   INTERACTIVE MENU
-===================================================== */
-function playBeep() {
-  const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-  audio.volume = 0.3;
-  audio.play();
-}
+function appendOut(txt){ cmdOut.textContent += txt + '\n'; cmdOut.scrollTop = cmdOut.scrollHeight; }
 
-function openLink(type) {
-  playBeep();
-  if (type === "github") window.location.href = "https://github.com/kaydenzolucy";
-  if (type === "telegram") window.location.href = "https://t.me/hkig899";
-}
-
-function showAbout() {
-  playBeep();
-  alert("Kaydenzo — Digital Explorer & Code Engineer.");
-}
-
-/* =====================================================
-   COMMAND TERMINAL
-===================================================== */
-const cmd = document.getElementById("cmdInput");
-const out = document.getElementById("cmdOutput");
-
-function print(x) {
-  out.innerHTML += x + "\n";
-  out.scrollTop = out.scrollHeight;
-}
-
-cmd.addEventListener("keydown", function(e) {
-  if (e.key === "Enter") {
-    const val = cmd.value.trim();
-    print("> " + val);
-
-    if (val === "help") {
-      print("Commands:\n help\n whoami\n social\n clear");
-    } 
-    else if (val === "whoami") {
-      print("User: guest\nNetwork: Kaydenzo Underground");
+appendOut("Welcome to Kaydenzo terminal. Type 'help' for commands.");
+cmdIn.addEventListener('keydown', async (e) => {
+  if(e.key === 'Enter'){
+    const v = cmdIn.value.trim();
+    if(!v) return;
+    appendOut('> ' + v);
+    if(v === 'help'){
+      appendOut('help  — show commands\nwhoami — identity\nsocial — show social links\nscan  — quick device & ip scan\ncrack — show cracking demo\nyt    — open YT→MP3 tool\nclear — clear terminal\ntheme — toggle ambient');
+    playBeep(700,0.05,0.04);
+    cmdIn.value='';
+      return;
     }
-    else if (val === "social") {
-      print("GitHub: github.com/kaydenzolucy\nTelegram: t.me/hkig899");
-    }
-    else if (val === "clear") {
-      out.innerHTML = "";
-    }
-    else {
-      print("Unknown command.");
-    }
-
-    cmd.value = "";
+    if(v === 'whoami'){ appendOut('User: guest\nRole: Coder — Bot Dev — Digital Explorer'); }
+    else if(v === 'social'){ appendOut('GitHub: github.com/kaydenzolucy\nTelegram: t.me/hkig899'); }
+    else if(v === 'clear'){ cmdOut.textContent=''; }
+    else if(v === 'scan'){ await runScan(); }
+    else if(v === 'crack'){ startCracker(); }
+    else if(v === 'yt'){ openYTModule(); }
+    else if(v === 'theme'){ toggleAmbient(); appendOut('Theme toggled.'); }
+    else { appendOut('Unknown command. Type help.'); }
+    playBeep(800,0.04,0.03);
+    cmdIn.value='';
   }
 });
-</script>
 
+/* ======================================================
+   DEVICE & IP SCAN (client-side, safe)
+   ====================================================== */
+async function runScan(){
+  appendOut('> Running quick device scan...');
+  try {
+    // user agent
+    const ua = navigator.userAgent || 'unknown';
+    appendOut('Browser UA: ' + ua);
+    // battery (if available)
+    if(navigator.getBattery){
+      const bat = await navigator.getBattery();
+      appendOut('Battery: ' + Math.round(bat.level*100) + '% (charging: '+bat.charging+')');
+    } else {
+      appendOut('Battery: unknown');
+    }
+    // platform
+    appendOut('Platform: ' + (navigator.platform || 'unknown'));
+    // ip via ipify
+    try{
+      const r = await fetch('https://api.ipify.org?format=json');
+      if(r.ok){
+        const js = await r.json();
+        appendOut('Public IP: ' + js.ip);
+      } else appendOut('Public IP: (fetch failed)');
+    }catch(e){ appendOut('Public IP: (blocked/failed)'); }
+  } catch(err){ appendOut('Scan error: ' + err.message); }
+}
+
+/* ======================================================
+   FAKE CRACKER (visual)
+   ====================================================== */
+function startCracker(){
+  playBeep(400,0.06,0.06);
+  const overlay = document.getElementById('crackerOverlay');
+  const box = document.getElementById('crackerBox');
+  overlay.style.display='block';
+  overlay.setAttribute('aria-hidden','false');
+  box.textContent = '> Initiating cracking sequence...\n';
+  const phrases = [
+    'Brute forcing...','attempts:','hashing...','comparing signatures...','candidate found...','verifying...','access level: root'
+  ];
+  let step=0, attempts=0;
+  const id = setInterval(()=>{
+    if(step < phrases.length){
+      if(phrases[step] === 'attempts:'){
+        attempts += Math.floor(Math.random()*9000)+2000;
+        box.textContent += `attempts: ${attempts}\n`;
+      } else {
+        box.textContent += phrases[step] + '\n';
+      }
+      playBeep(700+Math.random()*800,0.03,0.05);
+      step++;
+    } else {
+      box.textContent += '\n[OK] Hash matched ✓\nACCESS GRANTED\n\nSimulated only — no real cracking performed.';
+      playBeep(1200,0.15,0.06);
+      clearInterval(id);
+    }
+    box.scrollTop = box.scrollHeight;
+  }, 380);
+  document.getElementById('closeCrack').onclick = () => { overlay.style.display='none'; overlay.setAttribute('aria-hidden','true'); };
+}
+
+/* ======================================================
+   YT -> MP3 MODULE (client-side via third-party API)
+   NOTE: browser CORS or API availability can block; adjust API endpoint.
+   This function opens a small prompt and attempts to call a public converter API (example).
+   ====================================================== */
+function openYTModule(){
+  const url = prompt('Paste YouTube link (example): https://youtu.be/jgIpq1mJ_2Y?si=uG6YYvB89VcP8TFm');
+  if(!url) return;
+  playBeep(900,0.06,0.05);
+  appendOut('> Requesting conversion: ' + url);
+  // Example: try public converter endpoint (may be rate-limited / blocked). Replace with your own backend if needed.
+  // This example will open a new tab to a third-party service (user can download there).
+  const service = 'https://youtubemp3api.netlify.app/?url='; // placeholder: often blocked; replace with your own server for reliability
+  window.open(service + encodeURIComponent(url), '_blank');
+  appendOut('> Opened converter service in new tab. If blocked, consider hosting your own backend using yt-dlp.');
+}
+
+/* ======================================================
+   TOGGLE AMBIENT
+   ====================================================== */
+let ambientOn = true;
+function toggleAmbient(){ if(ambientOn){ stopAmbient(); ambientOn=false; } else { startAmbient(); ambientOn=true; } }
+
+/* ======================================================
+   SECRET MENU (Ctrl+K)
+   ====================================================== */
+document.addEventListener('keydown', (e)=>{
+  if(e.ctrlKey && e.key.toLowerCase() === 'k'){
+    e.preventDefault();
+    const ans = prompt('Secret menu: enter code (demo: 1337)') || '';
+    if(ans === '1337'){ alert('Secret: Developer tools unlocked (demo)'); playBeep(1500,0.08,0.08); }
+    else alert('Wrong code.');
+  }
+});
+
+/* ======================================================
+   INITIAL AUTO-TYPE WELCOME (simulated "console" feed)
+   ====================================================== */
+(function autoTypeWelcome(){
+  const lines = [
+    '> connecting to kaydenzo.network...',
+    '> handshake accepted',
+    '> injecting modules...',
+    '> system status: online'
+  ];
+  let p=0;
+  function step(){
+    if(p < lines.length){
+      appendOut(lines[p++]);
+      playBeep(700 + Math.random()*400, 0.04, 0.03);
+      setTimeout(step, 600 + Math.random()*300);
+    }
+  }
+  setTimeout(step, 900);
+})();
+
+/* ======================================================
+   Ensure accessibility and focus for input on load
+   ====================================================== */
+window.addEventListener('load', ()=>{ setTimeout(()=>{ document.getElementById('cmdInput').focus(); }, 1200); });
+
+</script>
 </body>
 </html>
