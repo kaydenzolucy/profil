@@ -13,6 +13,7 @@
   }
   html,body{height:100%;margin:0;background:var(--bg);font-family:"Courier New",monospace;color:var(--neon);-webkit-font-smoothing:antialiased}
   a{color:var(--neon);text-decoration:none}
+
   /* --- heavy glitch name --- */
   .hero{padding-top:48px;text-align:center;user-select:none}
   .glitch{
@@ -33,6 +34,7 @@
   }
   .glitch::before{color:var(--danger);left:3px;filter:blur(.6px);animation: g1 700ms infinite linear;}
   .glitch::after{color:var(--accent);left:-3px;filter:blur(.8px);animation: g2 900ms infinite linear;}
+
   @keyframes glitchShift{
     0%{transform:translateX(0) skewX(0)}
     20%{transform:translateX(-1px) skewX(-.2deg)}
@@ -49,7 +51,9 @@
   .running{overflow:hidden;border-bottom:1px dashed rgba(0,255,156,.06);padding:12px 0}
   .marquee{display:inline-block;white-space:nowrap;padding-left:100%;animation:marq 18s linear infinite}
   @keyframes marq{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+
   .grid{display:grid;grid-template-columns:120px 1fr;gap:6px;margin-top:12px;align-items:center}
+
   .menu{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
   .btn{background:transparent;border:1px solid rgba(0,255,156,.08);padding:8px 12px;border-radius:8px;color:var(--neon);cursor:pointer}
   .btn:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,255,156,.06)}
@@ -59,6 +63,7 @@
   #cmdWindow{margin:18px auto;background:rgba(0,0,0,.45);border-radius:8px;padding:12px;border:1px solid rgba(0,255,156,.04);max-width:960px}
   #cmdOutput{height:160px;overflow:auto;padding:8px;background:rgba(0,0,0,.25);border-radius:6px;border:1px solid rgba(0,255,156,.04);font-size:14px;line-height:18px;white-space:pre-wrap}
   #cmdInput{width:100%;margin-top:8px;padding:8px;background:transparent;border:none;border-bottom:1px solid rgba(0,255,156,.08);color:var(--neon);font-size:15px;outline:none}
+
   .footer{text-align:center;margin:26px 0 60px;opacity:.6;font-size:13px}
 
   /* --- modal accounts --- */
@@ -70,24 +75,20 @@
   .copy-btn{background:transparent;border:1px solid rgba(0,255,156,.06);padding:6px 8px;border-radius:6px;cursor:pointer;color:var(--neon)}
   .text-muted{opacity:.8;font-size:13px;color:#9becc9}
 
-  /* --- responsive --- */
-  @media(max-width:620px){.glitch{font-size:36px}.card{margin:8px}.marquee{animation-duration:28s}}
 </style>
 </head>
 <body>
 
-<!-- YT player (hidden) - we use IFrame API -->
+<!-- hidden yt player -->
 <div id="ytPlayerWrap" style="position:fixed;left:-9999px;top:-9999px;visibility:hidden"></div>
 
-<!-- HERO -->
-<section class="hero" aria-label="hero">
+<section class="hero">
   <div class="glitch" data-text="KAYDENZO">KAYDENZO</div>
 </section>
 
-<!-- MAIN -->
-<section class="card" role="region" aria-label="main card">
+<section class="card">
   <div class="running">
-    <div class="marquee">&gt; "My heart isn't broken — it simply stopped waiting for the wrong things for too long." — &nbsp; &gt; "Some feelings die quietly, but their ghosts stay forever." — &nbsp; &gt; "I don't hate; I simply preserved myself."</div>
+    <div class="marquee">&gt; "My heart isn't broken — it simply stopped waiting for the wrong things for too long." — &nbsp;&gt; "Some feelings die quietly, but their ghosts stay forever." — &nbsp;&gt; "I don't hate; I simply preserved myself."</div>
   </div>
 
   <div class="grid">
@@ -103,52 +104,35 @@
     <button class="btn" id="clearCmd">Clear Terminal</button>
   </div>
 
-  <div class="small text-muted" style="margin-top:10px">Tip: click anywhere once to enable sound (browser permission). Music will start muted on load; press "Toggle Music" to unmute after first interaction.</div>
+  <div class="small text-muted">Tip: Click once anywhere to unlock sound.</div>
 </section>
 
-<!-- TERMINAL -->
-<section id="cmdWindow" aria-label="terminal">
-  <h3 style="margin:6px 0 8px">&gt; Terminal Access</h3>
-  <div id="cmdOutput" aria-live="polite"></div>
-  <input id="cmdInput" placeholder="Type command (help, whoami, social, clear, viu)" aria-label="command input" />
+<section id="cmdWindow">
+  <h3>&gt; Terminal Access</h3>
+  <div id="cmdOutput"></div>
+  <input id="cmdInput" placeholder="Type command (help, whoami, social, viu, clear)" />
 </section>
 
-<!-- ACCOUNTS MODAL -->
-<div id="modal" class="modal" role="dialog" aria-hidden="true">
+<!-- modal -->
+<div id="modal" class="modal">
   <div class="modal-box">
     <div style="display:flex;justify-content:space-between;align-items:center">
       <strong>VIU Premium - Sample Accounts</strong>
-      <div>
-        <button class="btn" id="closeModal">Close</button>
-      </div>
+      <button class="btn" id="closeModal">Close</button>
     </div>
 
-    <p class="text-muted" style="margin:8px 0">Only display accounts you own/have permission to share. Use this list for demo UI only.</p>
+    <p class="text-muted">Display only accounts you own/have permission.</p>
 
-    <div style="display:flex;gap:8px">
-      <textarea id="accInput" placeholder="Paste accounts here, one per line (email:password)" style="flex:1;height:84px;background:#000;border:1px solid rgba(0,255,156,.06);color:var(--neon);padding:8px;border-radius:6px"></textarea>
-      <div style="width:160px;display:flex;flex-direction:column;gap:8px">
-        <button class="btn" id="loadAcc">Load Accounts</button>
-        <button class="btn" id="clearAcc">Clear</button>
-        <div class="text-muted small" style="margin-top:6px">Example format: <br>email:password</div>
-      </div>
-    </div>
+    <textarea id="accInput" style="width:100%;height:80px;background:#000;color:var(--neon);border:1px solid rgba(0,255,156,.06);padding:8px;border-radius:6px"></textarea>
 
-    <div class="acc-list" id="accList" aria-live="polite" style="margin-top:12px">
-      <!-- preloaded accounts displayed here -->
-    </div>
+    <div class="acc-list" id="accList"></div>
   </div>
 </div>
 
 <div class="footer">© 2025 Kaydenzo Underground Network</div>
 
 <script>
-/* ================== SAFETY NOTE (display only) ==================
-   This UI shows accounts you supply. Do NOT use or share accounts
-   without permission. This feature is for demo/presentation only.
-   ==============================================================*/
-
-/* ---------- initial accounts (from you) ---------- */
+/* INITIAL ACCOUNTS */
 let accounts = [
   "TommieClure@gmail.com:kaydenzo123",
   "SergioCoghlan@gmail.com:kaydenzo123",
@@ -157,197 +141,121 @@ let accounts = [
   "DarellGarica@gmail.com:kaydenzo123"
 ];
 
-/* ---------- tiny WebAudio click/beep fx ---------- */
+/* AUDIO FX */
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 const audioCtx = AudioCtx ? new AudioCtx() : null;
+
 function clickFx(){
   if(!audioCtx) return;
   const o = audioCtx.createOscillator();
   const g = audioCtx.createGain();
-  o.type = 'sine';
-  o.frequency.value = 880;
-  g.gain.value = 0.02;
+  o.type='sine'; o.frequency.value=880; g.gain.value=0.02;
   o.connect(g); g.connect(audioCtx.destination);
-  o.start();
-  setTimeout(()=>{ o.stop(); o.disconnect(); g.disconnect(); }, 80);
+  o.start(); setTimeout(()=>{o.stop()},80);
 }
+
 function cmdFx(){
   if(!audioCtx) return;
   const o = audioCtx.createOscillator();
   const g = audioCtx.createGain();
-  o.type = 'triangle';
-  o.frequency.value = 520;
-  g.gain.value = 0.03;
+  o.type='triangle'; o.frequency.value=520; g.gain.value=0.03;
   o.connect(g); g.connect(audioCtx.destination);
-  o.start();
-  setTimeout(()=>{ o.stop(); o.disconnect(); g.disconnect(); }, 140);
+  o.start(); setTimeout(()=>{o.stop()},140);
 }
 
-/* ---------- enable audio on first user interaction (autoplay policy) ---------- */
-function unlockAudio(){
-  if(!audioCtx) return;
-  if(audioCtx.state === 'suspended') audioCtx.resume();
-  document.removeEventListener('click', unlockAudio);
-  // after user interacts, allow unmute of YT player
-}
-document.addEventListener('click', unlockAudio, {once:true});
+document.addEventListener('click',()=>audioCtx?.resume(),{once:true});
 
-/* ---------- render account list in modal ---------- */
-const accList = document.getElementById('accList');
+/* RENDER ACCOUNTS */
+const accList=document.getElementById('accList');
 function renderAccounts(){
-  accList.innerHTML = '';
-  if(accounts.length === 0){
-    accList.innerHTML = '<div class="text-muted">No accounts loaded.</div>';
-    return;
-  }
-  accounts.forEach((a, idx) => {
-    const row = document.createElement('div');
-    row.className = 'acc-row';
-    const left = document.createElement('div');
-    left.textContent = (idx+1) + '. ' + a;
-    left.style.wordBreak = 'break-all';
-    const right = document.createElement('div');
-    const copyBtn = document.createElement('button');
-    copyBtn.className = 'copy-btn';
-    copyBtn.textContent = 'Copy';
-    copyBtn.onclick = () => {
-      navigator.clipboard.writeText(a).then(()=> {
-        clickFx();
-        copyBtn.textContent = 'Copied';
-        setTimeout(()=> copyBtn.textContent = 'Copy', 1200);
-      }).catch(()=> alert('Copy failed'));
+  accList.innerHTML="";
+  accounts.forEach((a,i)=>{
+    const row=document.createElement('div');
+    row.className='acc-row';
+    row.innerHTML=`
+      <div>${i+1}. ${a}</div>
+      <button class="copy-btn">Copy</button>
+    `;
+    row.querySelector('.copy-btn').onclick=()=>{
+      navigator.clipboard.writeText(a);
+      clickFx();
     };
-    right.appendChild(copyBtn);
-    row.appendChild(left);
-    row.appendChild(right);
     accList.appendChild(row);
   });
 }
-renderAccounts();
 
-/* ---------- modal controls ---------- */
-const modal = document.getElementById('modal');
-document.getElementById('openViu').addEventListener('click', ()=> {
+/* OPEN VIU MODAL */
+document.getElementById('openViu').onclick=()=>{
   clickFx();
-  document.getElementById('accInput').value = accounts.join('\\n');
-  modal.style.display = 'flex';
-  modal.setAttribute('aria-hidden','false');
+  document.getElementById('accInput').value=accounts.join("\n");
   renderAccounts();
-});
-document.getElementById('closeModal').addEventListener('click', ()=> {
-  clickFx();
-  modal.style.display = 'none';
-  modal.setAttribute('aria-hidden','true');
-});
+  modal.style.display="flex";
+};
 
-/* Load accounts from textarea */
-document.getElementById('loadAcc').addEventListener('click', ()=> {
+/* CLOSE VIU */
+document.getElementById('closeModal').onclick=()=>{
   clickFx();
-  const text = document.getElementById('accInput').value.trim();
-  if(!text) return alert('Paste accounts first (one per line, email:password).');
-  const lines = text.split(/\\r?\\n/).map(l=>l.trim()).filter(l=>l);
-  // append to accounts
-  accounts = accounts.concat(lines);
-  document.getElementById('accInput').value = accounts.join('\\n');
-  renderAccounts();
-});
+  modal.style.display="none";
+};
 
-/* Clear accounts (only removes user-added, keeps initial ones) */
-document.getElementById('clearAcc').addEventListener('click', ()=> {
-  clickFx();
-  if(!confirm('Clear ALL accounts? This removes all entries.')) return;
-  accounts = [];
-  renderAccounts();
-});
+/* TERMINAL */
+const out=document.getElementById('cmdOutput');
+const inp=document.getElementById('cmdInput');
+function put(msg){
+  out.textContent+=msg+"\n";
+  out.scrollTop=out.scrollHeight;
+}
+put("Welcome to Kaydenzo terminal. Type 'help'.");
 
-/* ---------- terminal logic ---------- */
-const out = document.getElementById('cmdOutput');
-const inp = document.getElementById('cmdInput');
-function put(s){ out.textContent += s + '\\n'; out.scrollTop = out.scrollHeight; }
-put('Welcome to Kaydenzo terminal. Type "help" for commands.');
-inp.addEventListener('keydown', function(e){
-  if(e.key === 'Enter'){
-    const v = inp.value.trim();
+inp.addEventListener('keydown',e=>{
+  if(e.key==="Enter"){
+    const v=inp.value.trim();
     if(!v) return;
-    put('> ' + v);
+    put("> "+v);
     cmdFx();
-    if(v === 'help') put('help - show commands\\nwhoami - identity\\nsocial - show social\\nviu - show accounts\\nclear - clear terminal');
-    else if(v === 'whoami') put('User: guest\\nRole: Coder — Bot Dev — Digital Explorer');
-    else if(v === 'social') put('GitHub: github.com/kaydenzolucy\\nTelegram: t.me/hkig899');
-    else if(v === 'viu') { put('Opening VIU modal...'); document.getElementById('openViu').click(); }
-    else if(v === 'clear') out.textContent = '';
-    else put('Unknown command.');
-    inp.value = '';
+    if(v==="help") put("help\nwhoami\nsocial\nviu\nclear");
+    else if(v==="whoami") put("User: guest\nRole: Coder — Bot Dev — Digital Explorer");
+    else if(v==="social") put("GitHub: github.com/kaydenzolucy\nTelegram: t.me/hkig899");
+    else if(v==="viu") document.getElementById('openViu').click();
+    else if(v==="clear") out.textContent="";
+    else put("Unknown command.");
+    inp.value="";
   }
 });
 
-/* ---------- interactive buttons ---------- */
-document.getElementById('openGit').addEventListener('click', ()=> { clickFx(); window.open('https://github.com/kaydenzolucy','_blank'); });
-document.getElementById('openTg').addEventListener('click', ()=> { clickFx(); window.open('https://t.me/hkig899','_blank'); });
-document.getElementById('clearCmd').addEventListener('click', ()=> { clickFx(); out.textContent=''; });
+/* CLEAR TERMINAL BUTTON */
+document.getElementById('clearCmd').onclick=()=>{clickFx(); out.textContent="";};
 
-/* ---------- YouTube IFrame API for background music ---------- */
-/* video id from your link: jgIpq1mJ_2Y */
+/* YOUTUBE PLAYER */
 let ytPlayer;
 function onYouTubeIframeAPIReady(){
-  ytPlayer = new YT.Player('ytPlayerWrap', {
-    height: '10', width: '10', // tiny hidden player
-    videoId: 'jgIpq1mJ_2Y',
-    playerVars: { 'autoplay': 1, 'controls': 0, 'loop': 1, 'playlist': 'jgIpq1mJ_2Y', 'modestbranding': 1, 'rel': 0, 'iv_load_policy': 3 },
-    events: {
-      onReady: (e) => {
-        // start muted (autoplay policy) - will play muted automatically
-        e.target.mute();
-        e.target.playVideo();
-      },
-      onStateChange: (ev) => {
-        // loop handling already via playlist param; nothing else required
-      }
-    }
+  ytPlayer = new YT.Player("ytPlayerWrap",{
+    height:"10",
+    width:"10",
+    videoId:"jgIpq1mJ_2Y",
+    playerVars:{autoplay:1,controls:0,loop:1,playlist:"jgIpq1mJ_2Y"},
+    events:{onReady:(e)=>{e.target.mute(); e.target.playVideo();}}
   });
 }
-/* load API */
-(function loadYT(){
-  const s = document.createElement('script');
-  s.src = "https://www.youtube.com/iframe_api";
-  document.head.appendChild(s);
-})();
 
-/* Toggle music (unmute after user action) */
-let musicMuted = true;
-document.getElementById('toggleMusic').addEventListener('click', ()=> {
+let musicMuted=true;
+document.getElementById('toggleMusic').onclick=()=>{
   clickFx();
-  if(!ytPlayer){
-    alert('Player initializing — try again in a moment.');
-    return;
-  }
+  if(!ytPlayer) return alert("Player loading...");
   if(musicMuted){
-    // unmute - allowed after user interaction
-    try { ytPlayer.unMute(); ytPlayer.setVolume(40); musicMuted = false; alert('Music unmuted.'); }
-    catch(e){ alert('Unable to unmute automatically. Click on page to allow audio, or open the YouTube link.'); }
+    ytPlayer.unMute(); ytPlayer.setVolume(40);
+    musicMuted=false;
   } else {
-    try { ytPlayer.mute(); musicMuted = true; alert('Music muted.'); }
-    catch(e){ alert('Failed to mute.'); }
+    ytPlayer.mute();
+    musicMuted=true;
   }
-});
+};
 
-/* ---------- heavy glitch burst on click (visual) ---------- */
-document.querySelector('.glitch').addEventListener('click', function(){
-  clickFx();
-  const el = this;
-  el.style.transition = 'transform .08s';
-  el.style.transform = 'translateX(6px) skewX(2deg)';
-  setTimeout(()=> el.style.transform = '', 120);
-});
-
-/* ---------- Accessibility / focus ---------- */
-window.addEventListener('load', ()=> { setTimeout(()=> inp.focus(), 700); });
-
-/* ---------- small helper: parse pasted accounts on page load (if any changed) ---------- */
-document.getElementById('accInput').value = accounts.join('\\n');
-renderAccounts();
-
-/* ----------------- End ----------------- */
+/* LOAD YT API */
+let s=document.createElement("script");
+s.src="https://www.youtube.com/iframe_api";
+document.head.appendChild(s);
 </script>
+
 </body>
 </html>
