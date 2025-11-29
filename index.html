@@ -10,371 +10,313 @@
     --bg:#000;
     --accent:#2be7ff;
     --danger:#ff4b4b;
-    --muted: rgba(255,255,255,0.06);
+
+    /* border diperjelas */
+    --border-strong:rgba(0,255,156,0.45);
   }
-  html,body{height:100%;margin:0;background:var(--bg);font-family:"Courier New",monospace;color:var(--neon);-webkit-font-smoothing:antialiased}
-  a{color:var(--neon);text-decoration:none}
+  html,body{
+    height:100%;margin:0;
+    background:#000;
+    font-family:"Courier New",monospace;
+    color:var(--neon);
+    overflow-x:hidden;
+  }
 
-/* container that's friendly on mobile: keep narrow and centered */
-  .container{max-width:720px;margin:12px auto;padding:12px;box-sizing:border-box}
+  /* Matrix background */
+  canvas#matrix {
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    z-index:-1;
+    background:#000;
+  }
 
-/* --- hero --- */
-  .hero{padding-top:28px;text-align:center;user-select:none}
+  .container{
+    max-width:720px;margin:12px auto;padding:12px;
+  }
+
+  /* glitch Kaydenzo */
+  .hero{text-align:center;margin-top:28px;}
   .glitch{
-    position:relative;display:inline-block;font-size:44px;font-weight:900;color:var(--neon);
-    text-shadow:0 0 8px rgba(0,255,156,.18);transform-origin:center;animation:glitchShift 2s infinite linear;
+    position:relative;
+    display:inline-block;
+    font-size:44px;
+    font-weight:900;
+    color:var(--neon);
+    text-shadow:0 0 8px rgba(0,255,156,.18);
   }
-  .glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;pointer-events:none;mix-blend-mode:screen}
-  .glitch::before{color:var(--danger);left:2px;filter:blur(.5px);animation:g1 700ms infinite linear}
-  .glitch::after{color:var(--accent);left:-2px;filter:blur(.6px);animation:g2 900ms infinite linear}
-  @keyframes glitchShift{0%{transform:translateX(0)}20%{transform:translateX(-1px)}40%{transform:translateX(1.5px)}60%{transform:translateX(-1px)}80%{transform:translateX(1px)}100%{transform:translateX(0)}}
-  @keyframes g1{0%{clip:rect(0,9999px,12px,0)}50%{clip:rect(34px,9999px,56px,0)}100%{clip:rect(0,9999px,12px,0)}}
-  @keyframes g2{0%{clip:rect(20px,9999px,40px,0)}50%{clip:rect(64px,9999px,96px,0)}100%{clip:rect(20px,9999px,40px,0)}}
 
-/* --- card --- */
-  .card{background:rgba(0,0,0,.55);padding:12px;border-radius:10px;border:1px solid rgba(0,255,156,.06);box-shadow:0 8px 24px rgba(0,255,156,.03)}
-  .running{overflow:hidden;border-bottom:1px dashed rgba(0,255,156,.06);padding:10px 0;margin-bottom:10px}
+  /* MAIN CARD */
+  .card{
+    background:rgba(0,0,0,.55);
+    padding:12px;
+    border-radius:10px;
+
+    /* border diperjelas */
+    border:1px solid var(--border-strong);
+  }
+
+  .running{overflow:hidden;border-bottom:1px solid var(--border-strong);padding:10px 0;margin-bottom:10px}
   .marquee{display:inline-block;white-space:nowrap;padding-left:60%;animation:marq 18s linear infinite}
   @keyframes marq{from{transform:translateX(0)}to{transform:translateX(-100%)}}
 
-/* compact grid for mobile */
-  .grid{display:grid;grid-template-columns:100px 1fr;gap:6px;margin-top:8px;align-items:center}
-  @media (max-width:420px){ .grid{grid-template-columns:1fr} .glitch{font-size:32px} .marquee{padding-left:120%} }
-
-/* buttons */
-  .menu{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-start}
-  .btn{background:transparent;border:1px solid rgba(0,255,156,.08);padding:8px 10px;border-radius:8px;color:var(--neon);cursor:pointer;font-weight:700;font-size:14px}
-  .btn:active{transform:translateY(1px)}
-  .small{font-size:12px;opacity:.85;color:rgba(155,236,201,.9);margin-top:8px}
-
-/* terminal */
-  #cmdWindow{margin-top:12px;background:rgba(0,0,0,.45);border-radius:8px;padding:10px;border:1px solid rgba(0,255,156,.04)}
-  #cmdOutput{height:140px;overflow:auto;padding:8px;background:rgba(0,0,0,.25);border-radius:6px;border:1px solid rgba(0,255,156,.04);font-size:13px;line-height:17px;white-space:pre-wrap}
-  #cmdInput{width:100%;margin-top:8px;padding:8px;background:transparent;border:none;border-bottom:1px solid rgba(0,255,156,.06);color:var(--neon);font-size:14px;outline:none}
-
-/* modal */
-  .modal{position:fixed;left:0;top:0;width:100%;height:100%;background:rgba(0,0,0,.9);display:none;align-items:flex-start;padding-top:48px;z-index:9999}
-  .modal-box{margin:0 12px;background:#06110a;border-radius:10px;padding:12px;border:1px solid rgba(0,255,156,.08);box-shadow:0 30px 60px rgba(0,0,0,.6)}
-  .acc-list{max-height:260px;overflow:auto;padding:6px;background:rgba(0,0,0,.25);border-radius:6px;border:1px solid rgba(0,255,156,.04);margin:8px 0}
-  .acc-row{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:6px;border-bottom:1px dashed rgba(0,255,156,.03)}
-  .copy-btn{background:transparent;border:1px solid rgba(0,255,156,.06);padding:6px 8px;border-radius:6px;cursor:pointer;color:var(--neon)}
-  .text-muted{opacity:.8;font-size:13px;color:#9becc9}
-
-/* music widget top-right */
-  .music-widget{
-    position:fixed;top:12px;right:12px;z-index:9998;background:rgba(0,0,0,.5);border:1px solid rgba(0,255,156,.06);
-    padding:8px;border-radius:10px;display:flex;gap:10px;align-items:center;backdrop-filter:blur(6px);
-    min-width:160px;max-width:260px;
+  /* GRID (garis dibuat jelas) */
+  .grid{
+    display:grid;
+    grid-template-columns:100px 1fr;
+    gap:6px;
+    margin-top:8px;
+    align-items:center;
+    border:1px solid var(--border-strong);
+    padding:8px;
+    border-radius:8px;
   }
-  .diskWrap{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 25%, rgba(255,255,255,.02) 0%, rgba(0,0,0,.6) 40%);box-shadow:inset 0 -6px 18px rgba(0,0,0,.6)}
-  .disk{width:42px;height:42px;border-radius:50%;background:conic-gradient(from 0deg,var(--accent) 0 16%, transparent 16% 32%, rgba(0,255,156,.06) 32% 48%);display:flex;align-items:center;justify-content:center;animation:spin 5s linear infinite}
-  .disk .hub{width:12px;height:12px;border-radius:50%;background:#06110a;border:2px solid rgba(0,255,156,.06)}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .songInfo{display:flex;flex-direction:column;gap:4px;min-width:84px}
-  .songTitle{font-weight:800;font-size:13px;line-height:1.1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .songMeta{font-size:11px;color:rgba(255,255,255,.6);opacity:.9}
 
-/* footer */
-  .footer{text-align:center;margin:20px 0 40px;opacity:.6;font-size:12px}
-
-/* small screens */
   @media (max-width:420px){
-    .music-widget{right:8px;top:8px;min-width:140px;padding:6px}
-    .songTitle{font-size:12px}
-    .diskWrap{width:44px;height:44px}
-    .disk{width:36px;height:36px}
+    .grid{grid-template-columns:1fr;}
+    .glitch{font-size:32px}
+  }
+
+  /* Buttons */
+  .menu{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+  .btn{
+    background:transparent;
+    border:1px solid var(--border-strong);
+    padding:8px 10px;
+    border-radius:8px;
+    color:var(--neon);
+    cursor:pointer;
+    font-weight:700;
+    font-size:14px;
+  }
+
+  /* terminal */
+  #cmdWindow{
+    margin-top:12px;
+    background:rgba(0,0,0,.45);
+    border-radius:8px;
+    padding:10px;
+    border:1px solid var(--border-strong);
+  }
+  #cmdOutput{
+    height:140px;
+    overflow:auto;
+    padding:8px;
+    background:rgba(0,0,0,.25);
+    border-radius:6px;
+    border:1px solid var(--border-strong);
+    font-size:13px;
+    white-space:pre-wrap;
+  }
+  #cmdInput{
+    width:100%;
+    margin-top:8px;
+    padding:8px;
+    background:transparent;
+    border:none;
+    border-bottom:1px solid var(--border-strong);
+    color:var(--neon);
+    outline:none;
+  }
+
+  /* modal */
+  .modal{
+    position:fixed;left:0;top:0;width:100%;height:100%;
+    background:rgba(0,0,0,.9);
+    display:none;align-items:flex-start;
+    padding-top:48px;z-index:9999;
+  }
+  .modal-box{
+    margin:0 12px;
+    background:#06110a;
+    border-radius:10px;
+    padding:12px;
+    border:1px solid var(--border-strong);
+  }
+
+  .acc-list{
+    max-height:260px;overflow:auto;
+    padding:6px;background:rgba(0,0,0,.25);
+    border-radius:6px;
+    border:1px solid var(--border-strong);
+    margin-top:12px;
+  }
+  .acc-row{
+    padding:6px;
+    border-bottom:1px solid var(--border-strong);
+    display:flex;justify-content:space-between;
   }
 </style>
 </head>
 <body>
+
+<!-- MATRIX BG -->
+<canvas id="matrix"></canvas>
+
 <div class="container">
 
-  <!-- HERO -->
-  <section class="hero" aria-label="hero">
+  <section class="hero">
     <div class="glitch" data-text="KAYDENZO">KAYDENZO</div>
   </section>
 
-  <!-- MAIN CARD -->
-  <section class="card" role="region" aria-label="main card">
+  <section class="card">
     <div class="running">
-      <div class="marquee">&gt; "My heart isn't broken — it simply stopped waiting for the wrong things for too long." — &nbsp; &gt; "Some feelings die quietly, but their ghosts stay forever." — &nbsp; &gt; "I don't hate; I simply preserved myself."</div>
+      <div class="marquee">&gt; "My heart isn't broken — it simply stopped waiting…" &nbsp; &gt; "Some feelings die quietly…" &nbsp; &gt; "I don't hate; I just outgrew."</div>
     </div>
 
-    <div class="grid" aria-hidden="false">
+    <div class="grid">
       <div>&gt; Status:</div><div id="statusText">ACTIVE</div>
       <div>&gt; Role:</div><div id="roleText">Coder — Bot Dev — Digital Explorer</div>
     </div>
 
-    <div class="menu" style="margin-top:12px">
+    <div class="menu">
       <button class="btn" id="openGit">Open GitHub</button>
       <button class="btn" id="openTg">Open Telegram</button>
-      <button class="btn" id="openViu">VIU Premium Free (Show Accounts)</button>
+      <button class="btn" id="openViu">VIU Premium Free</button>
       <button class="btn" id="clearCmd">Clear Terminal</button>
     </div>
 
-    <div class="small text-muted">Tip: click anywhere once to enable sound (browser permission). Music will autoplay muted on load; the page will try to unmute after you interact.</div>
   </section>
 
   <!-- Terminal -->
-  <section id="cmdWindow" aria-label="terminal">
-    <h3 style="margin:6px 0 8px">&gt; Terminal Access</h3>
-    <div id="cmdOutput" aria-live="polite"></div>
-    <input id="cmdInput" placeholder="Type command (help, whoami, social, clear, viu)" aria-label="command input" />
+  <section id="cmdWindow">
+    <h3 style="margin:6px 0 8px">&gt; Terminal</h3>
+    <div id="cmdOutput"></div>
+    <input id="cmdInput" placeholder="Type command…" />
   </section>
 
-  <div class="footer">© 2025 Kaydenzo Underground Network</div>
 </div>
 
-<!-- ACCOUNTS MODAL (load & clear buttons removed) -->
-<div id="modal" class="modal" role="dialog" aria-hidden="true">
+<!-- ACCOUNTS MODAL -->
+<div id="modal" class="modal">
   <div class="modal-box">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <strong>VIU Premium - Sample Accounts</strong>
-      <div>
-        <button class="btn" id="closeModal">Close</button>
-      </div>
+    <div style="display:flex;justify-content:space-between">
+      <strong>VIU Accounts</strong>
+      <button class="btn" id="closeModal">Close</button>
     </div>
 
-    <p class="text-muted" style="margin:8px 0">Only display accounts you own/have permission to share. Use this list for demo UI only.</p>
+    <textarea id="accInput" style="width:100%;height:80px;margin-top:8px;background:#000;color:#00ff9c;border:1px solid var(--border-strong);border-radius:6px;padding:6px"></textarea>
 
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <textarea id="accInput" placeholder="Paste accounts here, one per line (email:password)" style="flex:1;min-width:200px;height:84px;background:#000;border:1px solid rgba(0,255,156,.06);color:var(--neon);padding:8px;border-radius:6px"></textarea>
-      <div style="width:140px;display:flex;flex-direction:column;gap:8px;align-items:flex-start">
-        <div class="text-muted small" style="margin-top:6px">Example format:<br>email:password</div>
-      </div>
-    </div>
-
-    <div class="acc-list" id="accList" aria-live="polite" style="margin-top:12px">
-      <!-- preloaded accounts displayed here -->
-    </div>
+    <div class="acc-list" id="accList"></div>
   </div>
 </div>
 
-<!-- music widget (fixed top-right) -->
-<div class="music-widget" id="musicWidget" aria-hidden="false">
-  <div class="diskWrap" aria-hidden="true">
-    <div class="disk"><div class="hub"></div></div>
-  </div>
-  <div class="songInfo">
-    <div class="songTitle" id="songTitle">Loading track…</div>
-    <div class="songMeta" id="songMeta">Autoplay (muted)</div>
-  </div>
-</div>
-
-<!-- hidden tiny YT player -->
-<div id="ytPlayerWrap" style="position:fixed;left:-9999px;top:-9999px;visibility:hidden"></div>
+<!-- Hidden YT Player -->
+<div id="ytPlayerWrap" style="position:fixed;left:-9999px;top:-9999px"></div>
 
 <script>
-/* ========== accounts (unchanged logic except modal buttons removed) ========== */
+/* MATRIX BACKGROUND */
+const c = document.getElementById("matrix");
+const ctx = c.getContext("2d");
+
+c.width = window.innerWidth;
+c.height = window.innerHeight;
+
+const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789雨夢愛心";
+const size = 14;
+const columns = Math.floor(c.width / size);
+const drops = [];
+
+for(let i = 0; i < columns; i++) drops[i] = 1;
+
+function drawMatrix(){
+  ctx.fillStyle = "rgba(0,0,0,0.08)";
+  ctx.fillRect(0,0,c.width,c.height);
+
+  ctx.fillStyle = "#00ff9c";
+  ctx.shadowBlur = 10;
+  ctx.shadowColor = "#00ff9c";
+
+  for(let i = 0; i < drops.length; i++){
+    let char = letters[Math.floor(Math.random() * letters.length)];
+    ctx.fillText(char, i*size, drops[i]*size);
+
+    if(drops[i]*size > c.height && Math.random() > 0.975){
+      drops[i] = 0;
+    }
+    drops[i]++;
+  }
+}
+setInterval(drawMatrix, 40);
+
+/* ========== ACCOUNTS ========== */
 let accounts = [
   "TommieClure@gmail.com:kaydenzo123",
   "SergioCoghlan@gmail.com:kaydenzo123",
-  "MichaelaWestmorland@gmail.com:kaydenzo123",
-  "ZoraidaFoecke@gmail.com:kaydenzo123",
-  "DarellGarica@gmail.com:kaydenzo123"
+  "MichaelaWestmorland@gmail.com:kaydenzo123"
 ];
 
-/* tiny audio click fx */
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
-const audioCtx = AudioCtx ? new AudioCtx() : null;
-function clickFx(){
-  if(!audioCtx) return;
-  const o = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  o.type = 'sine'; o.frequency.value = 880; g.gain.value = 0.02;
-  o.connect(g); g.connect(audioCtx.destination);
-  o.start();
-  setTimeout(()=>{ o.stop(); o.disconnect(); g.disconnect(); }, 80);
-}
-function cmdFx(){
-  if(!audioCtx) return;
-  const o = audioCtx.createOscillator();
-  const g = audioCtx.createGain();
-  o.type = 'triangle'; o.frequency.value = 520; g.gain.value = 0.03;
-  o.connect(g); g.connect(audioCtx.destination);
-  o.start();
-  setTimeout(()=>{ o.stop(); o.disconnect(); g.disconnect(); }, 140);
-}
+const accList = document.getElementById("accList");
 
-/* unlock audio context on first gesture */
-function unlockAudio(){
-  if(!audioCtx) return;
-  if(audioCtx.state === 'suspended') audioCtx.resume();
-  document.removeEventListener('click', unlockAudio);
-}
-document.addEventListener('click', unlockAudio, {once:true});
-
-/* render accounts */
-const accList = document.getElementById('accList');
-function renderAccounts(){
-  accList.innerHTML = '';
-  if(accounts.length === 0){
-    accList.innerHTML = '<div class="text-muted">No accounts loaded.</div>';
-    return;
-  }
-  accounts.forEach((a, idx) => {
-    const row = document.createElement('div');
-    row.className = 'acc-row';
-    const left = document.createElement('div');
-    left.textContent = (idx+1) + '. ' + a;
-    left.style.wordBreak = 'break-all';
-    const right = document.createElement('div');
-    const copyBtn = document.createElement('button');
-    copyBtn.className = 'copy-btn';
-    copyBtn.textContent = 'Copy';
-    copyBtn.onclick = () => {
-      navigator.clipboard.writeText(a).then(()=> {
-        clickFx();
-        copyBtn.textContent = 'Copied';
-        setTimeout(()=> copyBtn.textContent = 'Copy', 1200);
-      }).catch(()=> alert('Copy failed'));
-    };
-    right.appendChild(copyBtn);
-    row.appendChild(left);
-    row.appendChild(right);
-    accList.appendChild(row);
+function renderAcc(){
+  accList.innerHTML = "";
+  accounts.forEach((a,i)=>{
+    accList.innerHTML += `
+      <div class="acc-row">
+        <span>${i+1}. ${a}</span>
+        <button class="btn" onclick="navigator.clipboard.writeText('${a}')">Copy</button>
+      </div>
+    `;
   });
 }
-renderAccounts();
+renderAcc();
 
-/* modal controls */
-const modal = document.getElementById('modal');
-document.getElementById('openViu').addEventListener('click', ()=> {
-  clickFx();
-  document.getElementById('accInput').value = accounts.join('\n');
-  modal.style.display = 'flex';
-  modal.setAttribute('aria-hidden','false');
-  renderAccounts();
-});
-document.getElementById('closeModal').addEventListener('click', ()=> {
-  clickFx();
-  // update accounts from textarea so pasted lines persist
-  const text = document.getElementById('accInput').value.trim();
-  if(text){
-    const lines = text.split(/\r?\n/).map(l=>l.trim()).filter(l=>l);
-    accounts = lines;
-  }
-  modal.style.display = 'none';
-  modal.setAttribute('aria-hidden','true');
-  renderAccounts();
-});
+/* MODAL */
+const modal = document.getElementById("modal");
+document.getElementById("openViu").onclick = ()=>{
+  modal.style.display="flex";
+  document.getElementById("accInput").value = accounts.join("\n");
+};
+document.getElementById("closeModal").onclick = ()=>{
+  modal.style.display="none";
+  accounts = document.getElementById("accInput").value.split("\n").filter(x=>x.trim());
+  renderAcc();
+};
 
-/* terminal logic (kept intact) */
-const out = document.getElementById('cmdOutput');
-const inp = document.getElementById('cmdInput');
-function put(s){ out.textContent += s + '\n'; out.scrollTop = out.scrollHeight; }
-put('Welcome to Kaydenzo terminal. Type "help" for commands.');
-inp.addEventListener('keydown', function(e){
-  if(e.key === 'Enter'){
-    const v = inp.value.trim();
-    if(!v) return;
-    put('> ' + v);
-    cmdFx();
-    if(v === 'help') put('help - show commands\nwhoami - identity\nsocial - show social\nviu - show accounts\nclear - clear terminal');
-    else if(v === 'whoami') put('User: guest\nRole: Coder — Bot Dev — Digital Explorer');
-    else if(v === 'social') put('GitHub: github.com/kaydenzolucy\nTelegram: t.me/hkig899');
-    else if(v === 'viu') { put('Opening VIU modal...'); document.getElementById('openViu').click(); }
-    else if(v === 'clear') out.textContent = '';
-    else put('Unknown command.');
-    inp.value = '';
+
+/* TERMINAL */
+const out = document.getElementById("cmdOutput");
+function put(t){ out.textContent += t+"\n"; out.scrollTop = out.scrollHeight; }
+
+put("Welcome to Kaydenzo terminal.");
+
+document.getElementById("cmdInput").addEventListener("keydown",e=>{
+  if(e.key==="Enter"){
+    const v = e.target.value.trim();
+    put("> "+v);
+
+    if(v==="help") put("help, whoami, viu, social, clear");
+    else if(v==="whoami") put("You are visitor.\nRole: Explorer.");
+    else if(v==="social") put("GitHub: github.com/kaydenzolucy\nTelegram: t.me/hkig899");
+    else if(v==="viu") document.getElementById("openViu").click();
+    else if(v==="clear") out.textContent="";
+    else put("Unknown command.");
+
+    e.target.value="";
   }
 });
 
-/* other buttons */
-document.getElementById('openGit').addEventListener('click', ()=> { clickFx(); window.open('https://github.com/kaydenzolucy','_blank'); });
-document.getElementById('openTg').addEventListener('click', ()=> { clickFx(); window.open('https://t.me/hkig899','_blank'); });
-document.getElementById('clearCmd').addEventListener('click', ()=> { clickFx(); out.textContent=''; });
+/* LINKS */
+document.getElementById("openGit").onclick=()=> window.open("https://github.com/kaydenzolucy","_blank");
+document.getElementById("openTg").onclick=()=> window.open("https://t.me/hkig899","_blank");
+document.getElementById("clearCmd").onclick=()=> out.textContent="";
 
-/* ========== YouTube IFrame API (autoplay muted) ========== */
-/* video id from your link: jgIpq1mJ_2Y */
+/* YT MUSIC AUTOPLAY (muted) */
 let ytPlayer;
 function onYouTubeIframeAPIReady(){
   ytPlayer = new YT.Player('ytPlayerWrap', {
-    height: '10', width: '10',
-    videoId: 'jgIpq1mJ_2Y',
-    playerVars: { 'autoplay': 1, 'controls': 0, 'loop': 1, 'playlist': 'jgIpq1mJ_2Y', 'modestbranding': 1, 'rel': 0, 'iv_load_policy': 3 },
-    events: {
-      onReady: (e) => {
-        try {
-          e.target.mute();
-          e.target.playVideo();
-          updateSongInfo(); // attempt to set title
-        } catch(err){
-          console.warn('YT ready error', err);
-        }
-      },
-      onStateChange: (ev) => {
-        // nothing special
-      }
-    }
+    videoId:'jgIpq1mJ_2Y',
+    playerVars:{autoplay:1, loop:1, playlist:'jgIpq1mJ_2Y', controls:0},
+    events:{onReady:e=>{
+      e.target.mute();
+      e.target.playVideo();
+    }}
   });
 }
-(function loadYT(){
-  const s = document.createElement('script');
-  s.src = "https://www.youtube.com/iframe_api";
-  document.head.appendChild(s);
-})();
+let s=document.createElement("script");
+s.src="https://www.youtube.com/iframe_api";
+document.body.appendChild(s);
 
-/* update song info (fallback to known title if API not accessible) */
-function updateSongInfo(){
-  const titleEl = document.getElementById('songTitle');
-  const metaEl = document.getElementById('songMeta');
-  try {
-    if(ytPlayer && ytPlayer.getVideoData){
-      const d = ytPlayer.getVideoData();
-      if(d && d.title){
-        titleEl.textContent = d.title;
-        metaEl.textContent = 'YouTube • autoplay (muted)';
-        return;
-      }
-    }
-  } catch(e){}
-  // fallback title
-  titleEl.textContent = 'Let Down – Mazzy Star (Let Down edit / viral)';
-  metaEl.textContent = 'YouTube • autoplay (muted)';
-}
-
-/* try to unmute on first meaningful click (user gesture) */
-let attemptedUnmute = false;
-function tryUnmute(){
-  if(attemptedUnmute) return;
-  attemptedUnmute = true;
-  try {
-    if(ytPlayer && ytPlayer.unMute){
-      ytPlayer.unMute();
-      ytPlayer.setVolume(60);
-      document.getElementById('songMeta').textContent = 'Playing';
-    }
-  } catch(e){
-    // silently fail (some browsers block unmute)
-  }
-}
-document.addEventListener('click', tryUnmute, {once:true});
-
-/* make sure song info updates a few times (YT API can be slow) */
-setTimeout(updateSongInfo, 800);
-setTimeout(updateSongInfo, 2000);
-
-/* small visual click on glitch */
-const glitchEl = document.querySelector('.glitch');
-if(glitchEl){
-  glitchEl.addEventListener('click', function(){
-    clickFx();
-    const el = this;
-    el.style.transition = 'transform .08s';
-    el.style.transform = 'translateX(6px) skewX(2deg)';
-    setTimeout(()=> el.style.transform = '', 120);
-  });
-}
-
-/* sync textarea with accounts on load */
-document.getElementById('accInput').value = accounts.join('\n');
-renderAccounts();
-
-/* Accessibility / focus */
-window.addEventListener('load', ()=> { setTimeout(()=> { try{ document.getElementById('cmdInput').focus(); }catch(e){} }, 600); });
-
-/* End */
 </script>
 </body>
 </html>
