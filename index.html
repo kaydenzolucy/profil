@@ -16,19 +16,37 @@ body {
   overflow-x: hidden;
 }
 
-/* ===== LOADING SCREEN ===== */
-#loading {
+/* ===== BOOT SEQUENCE ===== */
+#boot {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
   background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  z-index: 9999;
   color: #00ff9c;
-  font-size: 18px;
+  padding: 20px;
+  font-size: 16px;
+  z-index: 99999;
+}
+.boot-line {
+  opacity: 0;
+  animation: bootFade 0.5s forwards;
+}
+@keyframes bootFade { to { opacity: 1; } }
+
+/* ===== LOADING SCREEN ===== */
+#loading {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:#000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  z-index:9999;
+  color:#00ff9c;
+  font-size:18px;
+  display:none;
 }
 
 .loading-text {
@@ -39,105 +57,149 @@ body {
   animation: typing 2.8s steps(40) forwards, blink .7s infinite;
 }
 
-@keyframes typing { from { width: 0; } to { width: 270px; } }
+@keyframes typing { from { width: 0; } to { width: 260px; } }
 @keyframes blink { 50% { border-color: transparent; } }
 
-/* ===== MATRIX BACKGROUND ===== */
+/* ===== MATRIX BACKGROUND (2 LAYER) ===== */
 canvas {
   position: fixed;
   top: 0; left: 0;
   z-index: -1;
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
 }
 
 /* ===== GLITCH NAME ===== */
 .glitch {
-  font-size: 50px;
-  text-align: center;
-  font-weight: bold;
-  margin-top: 70px;
-  position: relative;
-  color: #00ff9c;
-  text-shadow: 0 0 12px #00ff9c;
+  font-size: 55px;
+  text-align:center;
+  margin-top:70px;
+  position:relative;
+  color:#00ff9c;
+  text-shadow:0 0 12px #00ff9c;
+}
+.glitch::before,
+.glitch::after {
+  content:attr(data-text);
+  position:absolute;
+  left:0;
+  width:100%;
+}
+.glitch::before {
+  left:2px;
+  text-shadow:-2px 0 red;
+  animation:glitch1 0.9s infinite linear alternate-reverse;
+}
+.glitch::after {
+  left:-2px;
+  text-shadow:-2px 0 blue;
+  animation:glitch2 1s infinite linear alternate-reverse;
+}
+
+@keyframes glitch1 {
+  0% { clip:rect(0,9999px,25px,0); }
+  100% { clip:rect(60px,9999px,120px,0); }
+}
+@keyframes glitch2 {
+  0% { clip:rect(20px,9999px,55px,0); }
+  100% { clip:rect(90px,9999px,140px,0); }
 }
 
 /* ===== TERMINAL BOX ===== */
 .terminal {
-  width: 85%;
-  margin: 40px auto;
-  border: 1px solid #00ff9c;
-  padding: 20px;
-  border-radius: 6px;
-  box-shadow: 0 0 15px #00ff9c;
-  background: rgba(0,0,0,0.7);
+  width:85%;
+  margin:40px auto;
+  border:1px solid #00ff9c;
+  border-radius:6px;
+  padding:20px;
+  background:rgba(0,0,0,0.6);
+  box-shadow:0 0 15px #00ff9c;
 }
 
-/* ===== INFO GRID ===== */
-.info-grid {
-  display: grid;
-  grid-template-columns: 120px auto;
-  row-gap: 6px;
-  font-size: 18px;
-}
-
-/* ===== FIXED RUNNING TEXT ===== */
+/* RUNNING TEXT */
 .running-box {
-  width: 100%;
-  overflow: hidden;
-  position: relative;
+  width:100%;
+  overflow:hidden;
+  position:relative;
 }
-
 .running-text {
-  display: inline-block;
-  white-space: nowrap;
-  padding-left: 100%;
-  animation: marquee 15s linear infinite;
-  font-size: 18px;
+  display:inline-block;
+  white-space:nowrap;
+  padding-left:100%;
+  animation:marquee 15s linear infinite;
+  font-size:18px;
 }
-
 @keyframes marquee {
-  from { transform: translateX(0%); }
-  to   { transform: translateX(-100%); }
+  from { transform:translateX(0%); }
+  to   { transform:translateX(-100%); }
 }
 
 /* ===== TERMINAL MENU ===== */
-.menu {
-  margin-top: 15px;
-}
 .menu div {
-  cursor: pointer;
-  padding: 6px 0;
+  cursor:pointer;
+  padding:6px 0;
 }
 .menu div:hover {
-  text-shadow: 0 0 10px white;
+  color:white;
+  text-shadow:0 0 15px white;
+}
+
+/* ===== INTERACTIVE COMMAND TERMINAL ===== */
+#cmdWindow {
+  width:85%;
+  margin:40px auto;
+  border:1px solid #00ff9c;
+  border-radius:6px;
+  padding:20px;
+  background:rgba(0,0,0,0.6);
+  box-shadow:0 0 15px #00ff9c;
+}
+#cmdOutput {
+  height:180px;
+  overflow-y:auto;
+  font-size:15px;
+  white-space:pre-wrap;
+  line-height:20px;
+}
+#cmdInput {
+  width:100%;
+  margin-top:10px;
+  background:#000;
+  border:none;
+  border-bottom:1px solid #00ff9c;
+  color:#00ff9c;
+  font-size:16px;
+  outline:none;
 }
 
 /* FOOTER */
 .footer {
-  text-align: center;
-  margin-top: 40px;
-  opacity: 0.7;
+  text-align:center;
+  margin-top:40px;
+  opacity:0.7;
 }
 </style>
 </head>
 <body>
 
-<!-- LOADING SCREEN -->
+<!-- BOOT SEQUENCE -->
+<div id="boot"></div>
+
+<!-- LOADING -->
 <div id="loading">
   <div class="loading-text" id="loadingText"></div>
 </div>
 
+<!-- MATRIX BG -->
 <canvas id="matrix"></canvas>
 
-<div class="glitch">KAYDENZO</div>
+<div class="glitch" data-text="KAYDENZO">KAYDENZO</div>
 
 <div class="terminal">
   <div class="running-box">
     <div class="running-text">
-      > "My heart isn't broken — it simply stopped waiting for the wrong things for too long. "
-      &nbsp;&nbsp;&nbsp;
-      > "My heart isn't broken — it simply stopped waiting for the wrong things for too long."
+      > "My heart isn't broken — it simply stopped waiting for the wrong things for too long." 
+      &nbsp;&nbsp;
+      > "Some feelings die quietly, but their ghosts stay forever."
     </div>
   </div>
 
@@ -145,23 +207,23 @@ canvas {
 
   <div class="info-grid">
     <div>> Status:</div> <div>ACTIVE</div>
-    <div>> Role:</div> <div>Coder — Bot Developer — Digital Explorer</div>
+    <div>> Role:</div> <div>Coder — Bot Dev — Digital Explorer</div>
   </div>
 
   <br>
-
-  <h3>> Interactive Terminal Menu</h3>
+  <h3>> Interactive Menu</h3>
   <div class="menu">
-    <div onclick="openLink('github')">[1] Open GitHub</div>
-    <div onclick="openLink('telegram')">[2] Open Telegram</div>
-    <div onclick="showAbout()">[3] About Me</div>
+    <div onclick="openLink('github')">[1] GitHub</div>
+    <div onclick="openLink('telegram')">[2] Telegram</div>
+    <div onclick="showAbout()">[3] About</div>
   </div>
 </div>
 
-<div class="terminal">
-  <h3>> Social Links</h3>
-  <p>GitHub: <a href="https://github.com/kaydenzolucy">kaydenzolucy</a></p>
-  <p>Telegram: <a href="https://t.me/hkig899">hkig899</a></p>
+<!-- COMMAND TERMINAL -->
+<div id="cmdWindow">
+  <h3>> Terminal Access</h3>
+  <div id="cmdOutput"></div>
+  <input id="cmdInput" placeholder="Type a command (help, whoami, social, clear)">
 </div>
 
 <div class="footer">
@@ -169,20 +231,53 @@ canvas {
 </div>
 
 <script>
-/* ===== LOADING SEQUENCE ===== */
-const loadText = [
-  "Initializing system...",
-  "Bypassing encryption...",
-  "Decrypting identity...",
-  "ACCESS GRANTED ✓"
+/* =====================================================
+   BOOT SEQUENCE
+===================================================== */
+const boot = [
+"[BOOT] Initializing Kaydenzo Network...",
+"[BOOT] Loading modules...",
+"[BOOT] Establishing secure link...",
+"[BOOT] Checking environment...",
+"[BOOT] Verifying identity hash...",
+"[OK] Access Granted. Welcome back."
 ];
 
-let i = 0;
+let b = 0;
+function bootNext() {
+  if (b < boot.length) {
+    const line = document.createElement("div");
+    line.className = "boot-line";
+    line.style.animationDelay = (b * 0.4) + "s";
+    line.innerText = boot[b];
+    document.getElementById("boot").appendChild(line);
+    b++;
+    setTimeout(bootNext, 300);
+  } else {
+    setTimeout(() => {
+      document.getElementById("boot").style.display="none";
+      document.getElementById("loading").style.display="flex";
+      typeLoading();
+    }, 2000);
+  }
+}
+bootNext();
+
+/* =====================================================
+   LOADING SCREEN
+===================================================== */
+const loadText = [
+  "Decrypting system...",
+  "Loading interface...",
+  "Finalizing UI...",
+  "ACCESS GRANTED ✓"
+];
+let lt = 0;
 
 function typeLoading() {
-  if (i < loadText.length) {
-    document.getElementById("loadingText").innerHTML = loadText[i];
-    i++;
+  if (lt < loadText.length) {
+    document.getElementById("loadingText").innerHTML = loadText[lt];
+    lt++;
     setTimeout(typeLoading, 900);
   } else {
     setTimeout(() => {
@@ -190,9 +285,10 @@ function typeLoading() {
     }, 400);
   }
 }
-typeLoading();
 
-/* ===== MATRIX EFFECT ===== */
+/* =====================================================
+   MATRIX EFFECT
+===================================================== */
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 
@@ -208,19 +304,29 @@ for (let i = 0; i < columns; i++) drops[i] = 1;
 function draw() {
   ctx.fillStyle = "rgba(0,0,0,0.08)";
   ctx.fillRect(0,0,canvas.width,canvas.height);
+
   ctx.fillStyle = "#00ff9c";
   ctx.font = fontSize + "px monospace";
 
   for (let i = 0; i < drops.length; i++) {
     const text = chars[Math.floor(Math.random()*chars.length)];
-    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-    if (drops[i] * fontSize > canvas.height && Math.random() > 0.965) drops[i] = 0;
+    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+
+    if (drops[i]*fontSize > canvas.height && Math.random() > 0.965) drops[i] = 0;
     drops[i]++;
   }
 }
 setInterval(draw, 33);
 
-/* ===== TERMINAL MENU ===== */
+/* =====================================================
+   INTERACTIVE MENU
+===================================================== */
+function playBeep() {
+  const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+  audio.volume = 0.3;
+  audio.play();
+}
+
 function openLink(type) {
   playBeep();
   if (type === "github") window.location.href = "https://github.com/kaydenzolucy";
@@ -232,12 +338,41 @@ function showAbout() {
   alert("Kaydenzo — Digital Explorer & Code Engineer.");
 }
 
-/* ===== SOUND ===== */
-function playBeep() {
-  const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
-  audio.volume = 0.3;
-  audio.play();
+/* =====================================================
+   COMMAND TERMINAL
+===================================================== */
+const cmd = document.getElementById("cmdInput");
+const out = document.getElementById("cmdOutput");
+
+function print(x) {
+  out.innerHTML += x + "\n";
+  out.scrollTop = out.scrollHeight;
 }
+
+cmd.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    const val = cmd.value.trim();
+    print("> " + val);
+
+    if (val === "help") {
+      print("Commands:\n help\n whoami\n social\n clear");
+    } 
+    else if (val === "whoami") {
+      print("User: guest\nNetwork: Kaydenzo Underground");
+    }
+    else if (val === "social") {
+      print("GitHub: github.com/kaydenzolucy\nTelegram: t.me/hkig899");
+    }
+    else if (val === "clear") {
+      out.innerHTML = "";
+    }
+    else {
+      print("Unknown command.");
+    }
+
+    cmd.value = "";
+  }
+});
 </script>
 
 </body>
