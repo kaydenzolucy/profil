@@ -6,14 +6,14 @@
 <title>Kaydenzo — Underground Profile</title>
 <style>
   :root{
-    --neon:#00ff9c;
-    --bg:#000;
-    --accent:#2be7ff;
-    --danger:#ff4b4b;
-    --muted: rgba(255,255,255,0.06);
-    --border-strong: rgba(0,255,156,0.55);
-    --glow: 0 0 14px rgba(0,255,156,0.18);
-  }
+    --neon:#4fc3ff;              /* neon biru utama */
+    --bg:#020814;                /* biru gelap */
+    --accent:#7aa2ff;            /* aksen biru-ungu santai */
+    --danger:#ff6b81;            /* merah lembut (tidak nyolok) */
+    --muted: rgba(79,195,255,0.08);
+    --border-strong: rgba(79,195,255,0.45);
+    --glow: 0 0 18px rgba(79,195,255,0.22);
+}
   html,body{
     height:100%;
     margin:0;
@@ -191,10 +191,10 @@ function drawMatrix(){
   ctx.fillStyle = "rgba(0,0,0,0.06)";
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  ctx.fillStyle = "#00ff9c";
+  ctx.fillStyle = "#4fc3ff";
   ctx.font = fontSize + "px monospace";
   ctx.shadowBlur = 12;
-  ctx.shadowColor = "#00ff9c";
+  ctx.shadowColo'yLRtEsD9qEQ';
 
   for(let i=0;i<columns;i++){
     const text = letters[Math.floor(Math.random()*letters.length)];
@@ -425,7 +425,7 @@ let playerReady = false;
 function onYouTubeIframeAPIReady(){
   ytPlayer = new YT.Player('ytPlayerWrap', {
     height: '10', width: '10',
-    videoId: 'yLRtEsD9qEQ',
+    videoId: 'tGv7CUutzqU',
     playerVars: { autoplay: 1, controls: 0, loop: 1, playlist: 'yLRtEsD9qEQ', modestbranding: 1, rel: 0, iv_load_policy: 3 },
     events: {
       onReady: function(e){
