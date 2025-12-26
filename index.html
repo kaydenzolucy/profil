@@ -19,27 +19,92 @@ html,body{
   background:var(--bg);
   font-family:"Courier New",monospace;
   color:var(--neon);
+  overflow-x:hidden;
 }
 .container{max-width:720px;margin:12px auto;padding:12px}
-a{color:var(--neon);text-decoration:none}
-.hero{text-align:center;margin-top:24px}
-.glitch{font-size:40px;font-weight:900;position:relative}
-.card{border:1px solid var(--border-strong);border-radius:10px;padding:12px;box-shadow:var(--glow)}
-.menu{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.btn{background:transparent;border:1px solid var(--border-strong);color:var(--neon);padding:8px;border-radius:8px;cursor:pointer}
-#cmdWindow{margin-top:12px;border:1px solid var(--border-strong);padding:10px;border-radius:8px}
-#cmdOutput{height:120px;overflow:auto;border:1px solid var(--border-strong);padding:6px}
-#cmdInput{width:100%;margin-top:6px;background:transparent;border:none;border-bottom:1px solid var(--border-strong);color:var(--neon);outline:none}
+.hero{text-align:center;padding-top:28px}
+.glitch{
+  font-size:44px;font-weight:900;
+  position:relative;
+  animation:glitchShift 2s infinite linear;
+}
+.glitch::before,.glitch::after{
+  content:attr(data-text);
+  position:absolute;left:0;top:0;width:100%;
+}
+.glitch::before{color:var(--danger);left:2px;opacity:.8}
+.glitch::after{color:var(--accent);left:-2px;opacity:.8}
 
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:9999}
-.modal-box{background:#020814;padding:12px;border-radius:10px;border:1px solid var(--border-strong)}
+@keyframes glitchShift{
+  0%,100%{transform:translateX(0)}
+  50%{transform:translateX(1px)}
+}
+
+.card{
+  background:rgba(0,0,0,.55);
+  padding:12px;border-radius:10px;
+  border:1px solid var(--border-strong);
+  box-shadow:var(--glow);
+}
+.running{overflow:hidden;border-bottom:1px dashed var(--border-strong)}
+.marquee{
+  white-space:nowrap;
+  padding-left:60%;
+  animation:marq 18s linear infinite;
+}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+
+.menu{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.btn{
+  background:transparent;
+  border:1px solid var(--border-strong);
+  padding:8px 10px;border-radius:8px;
+  color:var(--neon);cursor:pointer;
+}
+
+#cmdWindow{
+  margin-top:12px;
+  background:rgba(0,0,0,.45);
+  padding:10px;border-radius:8px;
+  border:1px solid var(--border-strong);
+}
+#cmdOutput{
+  height:140px;overflow:auto;
+  border:1px solid var(--border-strong);
+  padding:8px;
+}
+#cmdInput{
+  width:100%;margin-top:8px;
+  background:transparent;
+  border:none;border-bottom:1px solid var(--border-strong);
+  color:var(--neon);
+}
+
+.modal{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.9);
+  display:none;justify-content:center;
+  padding-top:48px;z-index:9999;
+}
+.modal-box{
+  background:#06110a;
+  padding:12px;border-radius:10px;
+  border:1px solid var(--border-strong);
+}
+
+.acc-row{
+  display:flex;justify-content:space-between;
+  border-bottom:1px dashed var(--border-strong);
+  padding:6px;
+}
 
 #musicBtn{
   position:fixed;right:10px;top:50%;
   transform:translateY(-50%);
-  width:36px;height:36px;border-radius:50%;
-  border:none;background:#4fc3ff;color:#020814;
-  font-weight:bold;cursor:pointer;z-index:2000
+  width:36px;height:36px;
+  border-radius:50%;
+  border:none;cursor:pointer;
+  font-weight:800;
 }
 
 canvas#matrix{
@@ -54,73 +119,113 @@ canvas#matrix{
 <canvas id="matrix"></canvas>
 
 <div class="container">
-  <div class="hero"><div class="glitch">KAYDENZO</div></div>
+  <section class="hero">
+    <div class="glitch" data-text="KAYDENZO">KAYDENZO</div>
+  </section>
 
-  <div class="card">
-    <div class="menu">
-      <button class="btn" id="openGit">GitHub</button>
-      <button class="btn" id="openTg">Telegram</button>
-      <button class="btn" id="openViu">VIU</button>
-      <button class="btn" id="clearCmd">Clear</button>
+  <section class="card">
+    <div class="running">
+      <div class="marquee">
+        &gt; "My heart isn't broken — it simply stopped waiting for the wrong things for too long." —
+        &gt; "Some feelings die quietly, but their ghosts stay forever." —
+        &gt; "I don't hate; I simply preserved myself."
+      </div>
     </div>
-  </div>
 
-  <div id="cmdWindow">
+    <div class="menu">
+      <button class="btn" id="openGit">Open GitHub</button>
+      <button class="btn" id="openTg">Open Telegram</button>
+      <button class="btn" id="openViu">VIU Account</button>
+      <button class="btn" id="clearCmd">Clear Terminal</button>
+    </div>
+  </section>
+
+  <section id="cmdWindow">
     <div id="cmdOutput"></div>
-    <input id="cmdInput" placeholder="type command..." />
-  </div>
+    <input id="cmdInput" placeholder="help, whoami, social, viu">
+  </section>
 </div>
 
 <div id="modal" class="modal">
   <div class="modal-box">
-    <p>VIU Account</p>
-    <pre>example@mail.com:password123</pre>
     <button class="btn" id="closeModal">Close</button>
+    <div id="accList"></div>
   </div>
 </div>
 
 <button id="musicBtn">▶</button>
+<div id="ytPlayerWrap" style="display:none"></div>
 
 <script>
 /* MATRIX */
-const canvas=document.getElementById('matrix');
-const ctx=canvas.getContext('2d');
-function resize(){canvas.width=innerWidth;canvas.height=innerHeight}
-resize();addEventListener('resize',resize);
-let drops=[];let fontSize=14;
-function draw(){
-  ctx.fillStyle="rgba(0,0,0,.08)";
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+function resize(){
+  canvas.width=innerWidth;
+  canvas.height=innerHeight;
+}
+resize();addEventListener("resize",resize);
+let cols=Math.floor(innerWidth/14);
+let drops=new Array(cols).fill(1);
+const chars="01ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+setInterval(()=>{
+  ctx.fillStyle="rgba(0,0,0,.05)";
   ctx.fillRect(0,0,canvas.width,canvas.height);
   ctx.fillStyle="#4fc3ff";
-  ctx.font=fontSize+"px monospace";
-  ctx.shadowColor="#4fc3ff";
   ctx.shadowBlur=10;
-  for(let i=0;i<canvas.width/fontSize;i++){
-    drops[i]=(drops[i]||0)+1;
-    ctx.fillText("01"[Math.random()*2|0],i*fontSize,drops[i]*fontSize);
-    if(drops[i]*fontSize>canvas.height) drops[i]=0;
+  ctx.shadowColor="#4fc3ff";
+  ctx.font="14px monospace";
+  for(let i=0;i<drops.length;i++){
+    const t=chars[Math.floor(Math.random()*chars.length)];
+    ctx.fillText(t,i*14,drops[i]*14);
+    if(drops[i]*14>canvas.height&&Math.random()>0.97)drops[i]=0;
+    drops[i]++;
   }
-}
-setInterval(draw,40);
+},40);
 
 /* TERMINAL */
-const out=document.getElementById('cmdOutput');
-const inp=document.getElementById('cmdInput');
-out.textContent="Welcome to Kaydenzo\n";
+const out=document.getElementById("cmdOutput");
+const inp=document.getElementById("cmdInput");
+function log(t){out.textContent+=t+"\n";out.scrollTop=out.scrollHeight}
+log("Welcome to Kaydenzo Terminal");
 inp.onkeydown=e=>{
   if(e.key==="Enter"){
-    out.textContent+=("> "+inp.value+"\n");
+    const v=inp.value.trim();
+    log("> "+v);
+    if(v==="help")log("help, whoami, social, viu, clear");
+    if(v==="whoami")log("Coder — Bot Dev");
+    if(v==="social")log("GitHub & Telegram");
+    if(v==="viu")document.getElementById("openViu").click();
+    if(v==="clear")out.textContent="";
     inp.value="";
-    out.scrollTop=out.scrollHeight;
   }
 };
 
-/* BUTTONS */
-openGit.onclick=()=>window.open("https://github.com/kaydenzolucy");
-openTg.onclick=()=>window.open("https://t.me/hkig899");
-openViu.onclick=()=>modal.style.display="flex";
-closeModal.onclick=()=>modal.style.display="none";
-clearCmd.onclick=()=>out.textContent="";
+/* MODAL */
+const modal=document.getElementById("modal");
+document.getElementById("openViu").onclick=()=>modal.style.display="flex";
+document.getElementById("closeModal").onclick=()=>modal.style.display="none";
+
+/* LINKS */
+openGit.onclick=()=>open("https://github.com/kaydenzolucy");
+openTg.onclick=()=>open("https://t.me/hkig899");
+
+/* MUSIC */
+let player,isMuted=true;
+function onYouTubeIframeAPIReady(){
+  player=new YT.Player("ytPlayerWrap",{videoId:"iqGAW57EudQ",events:{
+    onReady:e=>{e.target.mute();e.target.playVideo();}
+  }});
+}
+const s=document.createElement("script");
+s.src="https://www.youtube.com/iframe_api";
+document.head.appendChild(s);
+musicBtn.onclick=()=>{
+  if(!player)return;
+  if(isMuted){player.unMute();musicBtn.textContent="❚❚";}
+  else{player.pauseVideo();musicBtn.textContent="▶";}
+  isMuted=!isMuted;
+};
 </script>
 </body>
 </html>
