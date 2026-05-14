@@ -1,171 +1,1243 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Kaydenzo — Underground Profile</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>KAYDENZO STORE | Supreme Toolkit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#050a10">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ===== ROOT VARIABLES ===== */
+        :root {
+            --primary: #00eaff;
+            --primary-dim: rgba(0, 234, 255, 0.15);
+            --secondary: #0072ff;
+            --accent: #00ffaa;
+            --accent-warn: #ff6b6b;
+            --bg-deep: #02050a;
+            --bg-card: rgba(10, 15, 25, 0.85);
+            --bg-input: rgba(255, 255, 255, 0.04);
+            --text-main: #e8f1ff;
+            --text-dim: #8a9bb8;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-glow: rgba(0, 234, 255, 0.25);
+            --shadow-glow: 0 0 40px rgba(0, 234, 255, 0.08);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --radius-sm: 10px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-<style>
-/* ===== GLOBAL ===== */
-body {
-  margin: 0;
-  padding: 0;
-  background: #000;
-  font-family: "Courier New", monospace;
-  color: #00ff9c;
-  overflow-x: hidden;
-}
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-/* ===== MATRIX BACKGROUND ===== */
-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-}
+        /* ===== ANIMATED BACKGROUND ===== */
+        body {
+            background: var(--bg-deep);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
 
-/* ===== GLITCH NAME ===== */
-.glitch {
-  font-size: 50px;
-  text-align: center;
-  font-weight: bold;
-  margin-top: 70px;
-  position: relative;
-  color: #00ff9c;
-  text-shadow: 0 0 12px #00ff9c;
-}
-.glitch:before,
-.glitch:after {
-  content: attr(data-text);
-  position: absolute;
-  left: 0;
-  width: 100%;
-}
-.glitch:before {
-  left: 2px;
-  text-shadow: -2px 0 red;
-  clip: rect(12px, 9999px, 50px, 0);
-  animation: glitch1 1s infinite linear alternate-reverse;
-}
-.glitch:after {
-  left: -2px;
-  text-shadow: -2px 0 blue;
-  clip: rect(85px, 9999px, 140px, 0);
-  animation: glitch2 1s infinite linear alternate-reverse;
-}
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 234, 255, 0.12), transparent 60%),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(0, 114, 255, 0.06), transparent 50%),
+                linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+            animation: bgPulse 8s ease-in-out infinite alternate;
+        }
 
-/* ===== GLITCH ANIMATIONS ===== */
-@keyframes glitch1 {
-  0% { clip: rect(0, 9999px, 30px, 0); }
-  100% { clip: rect(70px, 9999px, 140px, 0); }
-}
-@keyframes glitch2 {
-  0% { clip: rect(5px, 9999px, 40px, 0); }
-  100% { clip: rect(110px, 9999px, 160px, 0); }
-}
+        @keyframes bgPulse {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
 
-/* ===== TERMINAL BOX ===== */
-.terminal {
-  width: 85%;
-  margin: 40px auto;
-  border: 1px solid #00ff9c;
-  border-radius: 6px;
-  padding: 20px;
-  box-shadow: 0 0 15px #00ff9c;
-  background: rgba(0, 0, 0, 0.7);
-}
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
 
-/* ===== RUNNING QUOTE ===== */
-.running-text {
-  font-size: 18px;
-  white-space: nowrap;
-  overflow: hidden;
-  box-sizing: border-box;
-  animation: slide 12s linear infinite;
-}
+        .particle {
+            position: absolute;
+            width: 3px; height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: floatUp linear infinite;
+        }
 
-@keyframes slide {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
-}
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.2; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
 
-a {
-  color: #00ff9c;
-  text-decoration: none;
-}
-a:hover {
-  text-shadow: 0 0 20px white;
-}
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 520px;
+            margin: auto;
+            padding: 24px 16px 60px;
+            position: relative;
+            z-index: 1;
+        }
 
-/* FOOTER */
-.footer {
-  text-align: center;
-  margin-top: 40px;
-  opacity: 0.7;
-}
-</style>
+        /* ===== HEADER / LOGO ===== */
+        .header {
+            text-align: center;
+            padding: 30px 0 20px;
+            position: relative;
+        }
+
+        .logo-ring {
+            width: 110px; height: 110px;
+            margin: 0 auto 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-ring::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: var(--primary);
+            border-right-color: var(--primary);
+            animation: spin 3s linear infinite;
+        }
+
+        .logo-ring::after {
+            content: '';
+            position: absolute;
+            inset: -12px;
+            border-radius: 50%;
+            border: 1px solid var(--border-glow);
+            animation: spin 5s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .logo-icon {
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: #fff;
+            box-shadow: 0 0 30px rgba(0, 234, 255, 0.3), inset 0 0 20px rgba(255,255,255,0.1);
+            animation: floatLogo 4s ease-in-out infinite;
+        }
+
+        @keyframes floatLogo {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .brand-name {
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: #fff;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #fff, var(--primary), #fff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+
+        .brand-tag {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 5px;
+            color: var(--primary);
+            margin-top: 6px;
+            opacity: 0.7;
+            text-transform: uppercase;
+        }
+
+        .divider-line {
+            width: 60px; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            margin: 16px auto 0;
+            border-radius: 2px;
+        }
+
+        /* ===== MENU GRID ===== */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .menu-card {
+            position: relative;
+            padding: 18px 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            overflow: hidden;
+            transition: var(--transition);
+            text-align: center;
+            backdrop-filter: blur(12px);
+        }
+
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .menu-card:hover, .menu-card.active {
+            border-color: var(--border-glow);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-glow), var(--shadow-card);
+        }
+
+        .menu-card:hover::before, .menu-card.active::before {
+            opacity: 1;
+        }
+
+        .menu-card:active {
+            transform: scale(0.96) translateY(0);
+        }
+
+        .menu-icon {
+            font-size: 22px;
+            margin-bottom: 8px;
+            display: block;
+            transition: var(--transition);
+        }
+
+        .menu-card:hover .menu-icon {
+            transform: scale(1.15);
+        }
+
+        .menu-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--text-main);
+            text-transform: uppercase;
+        }
+
+        .menu-desc {
+            font-size: 9px;
+            color: var(--text-dim);
+            margin-top: 3px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== SECTIONS ===== */
+        .section {
+            display: none;
+            margin-top: 20px;
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            backdrop-filter: blur(16px);
+            box-shadow: var(--shadow-card);
+            animation: slideUp 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .section-icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, var(--primary-dim), rgba(0,114,255,0.1));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--primary);
+            border: 1px solid var(--border-glow);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .section-subtitle {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
+
+        /* ===== INPUTS ===== */
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        .input-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 14px 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-subtle);
+            color: #fff;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(138, 155, 184, 0.4);
+            font-weight: 400;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary);
+            background: rgba(0, 234, 255, 0.04);
+            box-shadow: 0 0 0 3px rgba(0, 234, 255, 0.08), 0 0 20px rgba(0, 234, 255, 0.05);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a9bb8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+        }
+
+        select option {
+            background: #0a1525;
+            color: #fff;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-row .input-group {
+            flex: 1;
+        }
+
+        .input-row .input-group.shrink {
+            flex: 0 0 100px;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            color: #fff;
+            font-weight: 800;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            box-shadow: 0 4px 20px rgba(0, 114, 255, 0.3);
+            margin-top: 8px;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -60%;
+            width: 20%; height: 200%;
+            background: rgba(255,255,255,0.15);
+            transform: rotate(25deg);
+            transition: 0.6s;
+        }
+
+        .btn:hover::after {
+            left: 120%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 114, 255, 0.4);
+        }
+
+        .btn:active {
+            transform: scale(0.97) translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+            border: 1px solid var(--border-subtle);
+            box-shadow: none;
+            color: var(--text-main);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--border-glow);
+            background: linear-gradient(135deg, rgba(0,234,255,0.08), rgba(0,114,255,0.05));
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+            margin-top: 0;
+        }
+
+        /* ===== RESULT BOX ===== */
+        .result-box {
+            margin-top: 18px;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            color: var(--accent);
+            white-space: pre-wrap;
+            word-break: break-word;
+            min-height: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            opacity: 0.3;
+        }
+
+        .result-box.warn {
+            border-left-color: var(--accent-warn);
+            color: var(--accent-warn);
+        }
+
+        .result-box.warn::before {
+            background: linear-gradient(90deg, var(--accent-warn), transparent);
+        }
+
+        .result-box.info {
+            border-left-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .result-box.info::before {
+            background: linear-gradient(90deg, var(--primary), transparent);
+        }
+
+        /* ===== LOADING ===== */
+        .loading-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px;
+            justify-content: center;
+        }
+
+        .spinner {
+            width: 24px; height: 24px;
+            border: 2px solid rgba(0, 234, 255, 0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .loading-text {
+            font-size: 12px;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+        }
+
+        /* ===== GAME IFRAME ===== */
+        .game-frame {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            position: relative;
+        }
+
+        .game-frame iframe {
+            width: 100%; height: 320px;
+            border: none;
+            display: block;
+        }
+
+        .game-hint {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== EMAIL ALIAS OUTPUT ===== */
+        .alias-list {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(0,0,0,0.3);
+            border-radius: var(--radius-sm);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            line-height: 2;
+        }
+
+        .alias-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .alias-list::-webkit-scrollbar-thumb {
+            background: var(--border-glow);
+            border-radius: 4px;
+        }
+
+        .alias-item {
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: var(--transition);
+            cursor: pointer;
+            color: var(--accent);
+        }
+
+        .alias-item:hover {
+            background: rgba(0, 255, 170, 0.08);
+        }
+
+        .alias-item.copied {
+            background: rgba(0, 255, 170, 0.15);
+            color: #fff;
+        }
+
+        .alias-count {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            backdrop-filter: blur(16px);
+            box-shadow: var(--shadow-glow);
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer-text {
+            font-size: 10px;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.5;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 400px) {
+            .menu-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .menu-card {
+                padding: 14px 8px;
+            }
+            .menu-icon {
+                font-size: 18px;
+            }
+            .menu-label {
+                font-size: 10px;
+            }
+            .brand-name {
+                font-size: 22px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<canvas id="matrix"></canvas>
+<!-- Floating Particles -->
+<div class="particles" id="particles"></div>
 
-<div class="glitch" data-text="KAYDENZO">KAYDENZO</div>
+<div class="container">
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo-ring">
+            <div class="logo-icon">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+        </div>
+        <div class="brand-name">KAYDENZO</div>
+        <div class="brand-tag">Supreme Toolkit</div>
+        <div class="divider-line"></div>
+    </div>
 
-<div class="terminal">
-  <div class="running-text">
-    > "Hati ini tidak hancur hanya kehabisan tempat untuk berharap."
-  </div>
-  <br><br>
-  <div>
-    > Status: ACTIVE <br>
-    > Role: Coder, Bot Developer, Digital Explorer <br>
-  </div>
+    <!-- MENU GRID -->
+    <div class="menu-grid">
+        <div class="menu-card" onclick="showSection('wr')">
+            <span class="menu-icon"><i class="fa-solid fa-chart-pie"></i></span>
+            <div class="menu-label">Hitung WR</div>
+            <div class="menu-desc">Analisis winrate</div>
+        </div>
+        <div class="menu-card" onclick="showSection('target')">
+            <span class="menu-icon"><i class="fa-solid fa-bullseye"></i></span>
+            <div class="menu-label">Target WR</div>
+            <div class="menu-desc">Proyeksi push rank</div>
+        </div>
+        <div class="menu-card" onclick="showSection('hero')">
+            <span class="menu-icon"><i class="fa-solid fa-gamepad"></i></span>
+            <div class="menu-label">Random Hero</div>
+            <div class="menu-desc">Spin hero MLBB</div>
+        </div>
+        <div class="menu-card" onclick="showSection('mlbb')">
+            <span class="menu-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <div class="menu-label">Cek ID MLBB</div>
+            <div class="menu-desc">Cari info akun</div>
+        </div>
+        <div class="menu-card" onclick="showSection('dino')">
+            <span class="menu-icon"><i class="fa-solid fa-robot"></i></span>
+            <div class="menu-label">Mini Game</div>
+            <div class="menu-desc">Dino runner</div>
+        </div>
+        <div class="menu-card" onclick="showSection('alias')">
+            <span class="menu-icon"><i class="fa-solid fa-envelope-open-text"></i></span>
+            <div class="menu-label">Gmail Alias</div>
+            <div class="menu-desc">Generate alias</div>
+        </div>
+    </div>
+
+    <!-- SECTION: HITUNG WR -->
+    <div class="section" id="wr">
+        <div class="section-header">
+            <div class="section-icon"><i class="fa-solid fa-chart-pie"></i></div>
+            <div>
+                <div class="section-title">Hitung Winrate</div>
+                <div class="section-subtitle">Analisis statistik match</div>
+            </div>
+        </div>
+        <div class="input-group">
+            <label class="input-label">Winrate Saat Ini (%)</label>
+            <input type="number" id="wrInput" placeholder="Contoh: 65.5" inputmode="decimal" step="0.01">
+        </div>
+        <div class="input-group">
+            <label class="input-label">Total Match</label>
+            <input type="number" id="matchInput" placeholder="Contoh: 500" inputmode="numeric">
+        </div>
+        <button class="btn" onclick="hitungWR()">
+            <i class="fa-solid fa-calculator"></i> Kalkulasi
+        </button>
+        <div class="result-box" id="wrResult">Hasil akan muncul di sini...</div>
+    </div>
+
+    <!-- SECTION: TARGET WR -->
+    <div class="section" id="target">
+        <div class="section-header">
+            <div class="section-icon"><i class="fa-solid fa-bullseye"></i></div>
+            <div>
+                <div class="section-title">Target Winrate</div>
+                <div class="section-subtitle">Hitung butuh berapa win lagi</div>
+            </div>
+        </div>
+        <div class="input-group">
+            <label class="input-label">WR Sekarang (%)</label>
+            <input type="number" id="wrNow" placeholder="Contoh: 55" inputmode="decimal" step="0.01">
+        </div>
+        <div class="input-group">
+            <label class="input-label">Total Match Sekarang</label>
+            <input type="number" id="matchNow" placeholder="Contoh: 200" inputmode="numeric">
+        </div>
+        <div class="input-group">
+            <label class="input-label">WR Target (%)</label>
+            <input type="number" id="wrTarget" placeholder="Contoh: 70" inputmode="decimal" step="0.01">
+        </div>
+        <button class="btn" onclick="targetWR()">
+            <i class="fa-solid fa-crosshairs"></i> Hitung Target
+        </button>
+        <div class="result-box" id="targetResult">Hasil akan muncul di sini...</div>
+    </div>
+
+    <!-- SECTION: RANDOM HERO -->
+    <div class="section" id="hero">
+        <div class="section-header">
+            <div class="section-icon"><i class="fa-solid fa-gamepad"></i></div>
+            <div>
+                <div class="section-title">Random Hero MLBB</div>
+                <div class="section-subtitle">Spin hero untuk tim kamu</div>
+            </div>
+        </div>
+        <div class="input-group">
+            <label class="input-label">Pilih Role</label>
+            <select id="role">
+                <option value="all">Semua Role</option>
+                <option value="tank">Tank</option>
+                <option value="fighter">Fighter</option>
+                <option value="assassin">Assassin</option>
+                <option value="mage">Mage</option>
+                <option value="marksman">Marksman</option>
+                <option value="support">Support</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label class="input-label">Nama Pemain (satu per baris)</label>
+            <textarea id="players" placeholder="Kayden&#10;Gusion&#10;Lancelot&#10;..."></textarea>
+        </div>
+        <button class="btn" onclick="randomHero()">
+            <i class="fa-solid fa-dice"></i> Generate Hero
+        </button>
+        <div class="result-box" id="heroResult">Hero akan muncul di sini...</div>
+    </div>
+
+    <!-- SECTION: CEK ID MLBB -->
+    <div class="section" id="mlbb">
+        <div class="section-header">
+            <div class="section-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+            <div>
+                <div class="section-title">Cek ID MLBB</div>
+                <div class="section-subtitle">Cari info akun Mobile Legends</div>
+            </div>
+        </div>
+        <div class="input-row">
+            <div class="input-group">
+                <label class="input-label">User ID</label>
+                <input type="number" id="mlID" placeholder="12345678" inputmode="numeric">
+            </div>
+            <div class="input-group shrink">
+                <label class="input-label">Server</label>
+                <input type="number" id="mlServer" placeholder="1234" inputmode="numeric">
+            </div>
+        </div>
+        <button class="btn" onclick="cekIDML()">
+            <i class="fa-solid fa-search"></i> Periksa ID
+        </button>
+        <div class="result-box info" id="mlResult">Detail akun akan muncul di sini...</div>
+    </div>
+
+    <!-- SECTION: MINI GAME -->
+    <div class="section" id="dino">
+        <div class="section-header">
+            <div class="section-icon"><i class="fa-solid fa-robot"></i></div>
+            <div>
+                <div class="section-title">Dino Runner</div>
+                <div class="section-subtitle">Mini game untuk ngisi waktu</div>
+            </div>
+        </div>
+        <div class="game-frame">
+            <iframe src="https://chromedino.com/" loading="lazy"></iframe>
+        </div>
+        <div class="game-hint">
+            <i class="fa-solid fa-hand-pointer"></i> Ketuk layar atau tekan spasi untuk melompat
+        </div>
+    </div>
+
+    <!-- SECTION: GMAIL ALIAS -->
+    <div class="section" id="alias">
+        <div class="section-header">
+            <div class="section-icon"><i class="fa-solid fa-envelope-open-text"></i></div>
+            <div>
+                <div class="section-title">Gmail Alias Generator</div>
+                <div class="section-subtitle">Buat alias email otomatis</div>
+            </div>
+        </div>
+        <div class="input-group">
+            <label class="input-label">Email Utama</label>
+            <input type="email" id="aliasEmail" placeholder="user@gmail.com">
+        </div>
+        <div class="input-group">
+            <label class="input-label">Jumlah Alias</label>
+            <input type="number" id="aliasCount" placeholder="Contoh: 50" inputmode="numeric" value="50">
+        </div>
+        <div class="input-group">
+            <label class="input-label">Tipe Alias</label>
+            <select id="aliasType">
+                <option value="dot">Titik (kay.den.zo)</option>
+                <option value="plus">Plus (kaydenzo+abc123)</option>
+                <option value="mixed">Campuran (dot + plus)</option>
+            </select>
+        </div>
+        <div class="btn-group">
+            <button class="btn" onclick="generateAlias()">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate
+            </button>
+            <button class="btn btn-secondary" onclick="copyAllAlias()">
+                <i class="fa-solid fa-copy"></i> Copy All
+            </button>
+        </div>
+        <div class="alias-list" id="aliasList" style="display:none;"></div>
+        <div class="alias-count" id="aliasCount"></div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <div class="footer-text">KAYDENZO STORE &copy; 2026</div>
+    </div>
 </div>
 
-<div class="terminal">
-  <h3>> Social Links</h3>
-  <p>GitHub: <a href="https://github.com/kaydenzolucy">kaydenzolucy</a></p>
-  <p>Telegram: <a href="https://t.me/hkig899">hkig899</a></p>
-</div>
-
-<div class="footer">
-  © 2025 Kaydenzo Underground Network
-</div>
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
 
 <script>
-/* ===== MATRIX RAIN EFFECT ===== */
-const canvas = document.getElementById("matrix");
-const ctx = canvas.getContext("2d");
+// ===== PARTICLES =====
+function createParticles() {
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 20; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDuration = (Math.random() * 10 + 8) + 's';
+        p.style.animationDelay = (Math.random() * 10) + 's';
+        p.style.width = p.style.height = (Math.random() * 3 + 1) + 'px';
+        container.appendChild(p);
+    }
+}
+createParticles();
 
-canvas.height = window.innerHeight;
-canvas.width = window.innerWidth;
-
-const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>/*-+=@#$%&";
-const fontSize = 16;
-const columns = canvas.width / fontSize;
-const drops = [];
-
-for (let i = 0; i < columns; i++) drops[i] = 1;
-
-function draw() {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.08)";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.fillStyle = "#00ff9c";
-  ctx.font = fontSize + "px monospace";
-
-  for (let i = 0; i < drops.length; i++) {
-    const text = chars[Math.floor(Math.random() * chars.length)];
-    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-    if (drops[i] * fontSize > canvas.height && Math.random() > 0.965) drops[i] = 0;
-    drops[i]++;
-  }
+// ===== TOAST =====
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-setInterval(draw, 33);
+// ===== SECTION NAVIGATION =====
+let currentSection = null;
+
+function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => {
+        s.classList.remove('active');
+        s.style.display = 'none';
+    });
+    document.querySelectorAll('.menu-card').forEach(c => c.classList.remove('active'));
+
+    const el = document.getElementById(id);
+    if (el) {
+        el.style.display = 'block';
+        // Force reflow for animation
+        void el.offsetWidth;
+        el.classList.add('active');
+        currentSection = id;
+
+        // Highlight menu
+        const menuCards = document.querySelectorAll('.menu-card');
+        const index = ['wr','target','hero','mlbb','dino','alias'].indexOf(id);
+        if (index >= 0 && menuCards[index]) menuCards[index].classList.add('active');
+
+        setTimeout(() => {
+            const rect = el.getBoundingClientRect();
+            const scrollTop = window.pageYOffset + rect.top - 20;
+            window.scrollTo({ top: scrollTop, behavior: 'smooth' });
+        }, 50);
+    }
+}
+
+// ===== HERO DATA =====
+const roles = {
+    tank: ["Akai","Atlas","Baxia","Belerick","Chip","Edith","Franco","Gatotkaca","Gloo","Hilda","Hylos","Johnson","Khufra","Lolita","Minotaur","Tigreal","Uranus","Fredrinn","Barats","Grock"],
+    fighter: ["Aldous","Alucard","Alpha","Argus","Arlott","Badang","Balmond","Benedetta","Chou","Cici","Dyrroth","Freya","Guinevere","Jawhead","Kaja","Khaleed","Lapu-Lapu","Leomord","Martis","Masha","Minotaur","Paquito","Phoveus","Roger","Ruby","Silvanna","Sun","Terizla","Thamuz","X.Borg","Yu Zhong","Yin","Zilong","Aulus","Julian"],
+    assassin: ["Aamon","Benedetta","Fanny","Gusion","Hanzo","Harley","Hayabusa","Helcurt","Joy","Karina","Lancelot","Ling","Mathilda","Natalia","Nolan","Saber","Selena","Yi Sun-shin","Arlott"],
+    mage: ["Alice","Aurora","Cecilion","Chang'e","Cyclops","Eudora","Faramis","Gord","Harith","Harley","Kadita","Kagura","Lunox","Lylia","Luo Yi","Nana","Novaria","Odette","Pharsa","Valentina","Vale","Valir","Vexana","Xavier","Yve","Zhask","Zetian"],
+    marksman: ["Beatrix","Bruno","Brody","Claude","Clint","Granger","Hanabi","Irithel","Ixia","Karrie","Kimmy","Layla","Lesley","Melissa","Moskov","Natan","Popol and Kupa","Roger","Wanwan","Yi Sun-shin"],
+    support: ["Angela","Carmilla","Diggie","Estes","Floryn","Kaja","Mathilda","Rafaela","Minotaur","Faramis"]
+};
+
+// ===== HITUNG WR =====
+function hitungWR() {
+    const wr = parseFloat(document.getElementById("wrInput").value);
+    const match = parseInt(document.getElementById("matchInput").value);
+    const result = document.getElementById("wrResult");
+
+    if (isNaN(wr) || isNaN(match) || match < 0 || wr < 0 || wr > 100) {
+        result.className = "result-box warn";
+        result.innerText = "❌ Data tidak valid. Pastikan WR 0-100 dan match >= 0.";
+        return;
+    }
+
+    const menang = Math.round((wr / 100) * match);
+    const kalah = match - menang;
+    const winRateDisplay = wr % 1 === 0 ? wr + "%" : wr.toFixed(2) + "%";
+
+    result.className = "result-box";
+    result.innerText =
+`📊 HASIL ANALISIS
+━━━━━━━━━━━━━━━━━━━━
+✔ Menang   : ${menang.toLocaleString()}
+✖ Kalah    : ${kalah.toLocaleString()}
+★ Total    : ${match.toLocaleString()}
+★ Winrate  : ${winRateDisplay}`;
+}
+
+// ===== TARGET WR =====
+function targetWR() {
+    const wrNow = parseFloat(document.getElementById("wrNow").value);
+    const matchNow = parseInt(document.getElementById("matchNow").value);
+    const wrTarget = parseFloat(document.getElementById("wrTarget").value);
+    const result = document.getElementById("targetResult");
+
+    if (isNaN(wrNow) || isNaN(matchNow) || isNaN(wrTarget) || matchNow < 0 || wrNow < 0 || wrNow > 100 || wrTarget < 0 || wrTarget > 100) {
+        result.className = "result-box warn";
+        result.innerText = "❌ Data tidak valid. Pastikan semua nilai benar.";
+        return;
+    }
+
+    const winNow = (wrNow / 100) * matchNow;
+
+    if (wrTarget <= wrNow) {
+        result.className = "result-box info";
+        result.innerText = "✅ TARGET SUDAH TERCAPAI!
+Tidak perlu push lagi.";
+        return;
+    }
+
+    if (wrTarget >= 100) {
+        result.className = "result-box warn";
+        result.innerText = "⚠️ WR 100% tidak mungkin dicapai setelah kalah.";
+        return;
+    }
+
+    const need = Math.ceil((wrTarget * matchNow - 100 * winNow) / (100 - wrTarget));
+    const totalMatch = matchNow + need;
+
+    result.className = "result-box";
+    result.innerText =
+`📈 PROYEKSI PUSH RANK
+━━━━━━━━━━━━━━━━━━━━
+✔ Menang sekarang : ${Math.round(winNow).toLocaleString()}
+🔥 Butuh win lagi  : ${need.toLocaleString()}
+⚔ Total match nanti : ${totalMatch.toLocaleString()}
+🎯 WR Target       : ${wrTarget}%`;
+}
+
+// ===== RANDOM HERO =====
+function randomHero() {
+    const role = document.getElementById("role").value;
+    const playersRaw = document.getElementById("players").value;
+    const result = document.getElementById("heroResult");
+
+    const players = playersRaw.split("\n").map(p => p.trim()).filter(Boolean);
+
+    let pool = [];
+    if (role === "all") {
+        Object.values(roles).forEach(r => pool.push(...r));
+    } else {
+        pool = [...roles[role]];
+    }
+
+    if (!players.length) {
+        result.className = "result-box warn";
+        result.innerText = "❌ Masukkan nama pemain terlebih dahulu.";
+        return;
+    }
+
+    if (players.length > pool.length) {
+        result.className = "result-box warn";
+        result.innerText = "❌ Pemain terlalu banyak untuk role ini.";
+        return;
+    }
+
+    pool.sort(() => Math.random() - 0.5);
+    let assigned = [];
+    let index = 0;
+
+    result.className = "result-box info";
+    result.innerText = "⚙ GENERATING HERO...\n";
+
+    function spinPlayer() {
+        if (index >= players.length) {
+            renderFinal();
+            return;
+        }
+        let spinCount = 0;
+        const spin = setInterval(() => {
+            const fakeHero = pool[Math.floor(Math.random() * pool.length)];
+            let output = "⚙ GENERATING HERO...\n\n";
+            assigned.forEach((h, i) => {
+                output += `✔ ${players[i]}  →  ${h}\n`;
+            });
+            output += `\n⏳ ${players[index]}  →  ${fakeHero}`;
+            result.innerText = output;
+            spinCount++;
+            if (spinCount > 14) {
+                clearInterval(spin);
+                const hero = pool.pop();
+                assigned.push(hero);
+                index++;
+                setTimeout(spinPlayer, 280);
+            }
+        }, 90);
+    }
+
+    function renderFinal() {
+        let output = "🎯 GENERATION COMPLETE\n━━━━━━━━━━━━━━━━━━━━\n\n";
+        assigned.forEach((h, i) => {
+            output += `✔ ${players[i]}  →  ${h}\n`;
+        });
+        output += `\n📦 Total: ${assigned.length} hero\n🎲 Role: ${role === 'all' ? 'Semua Role' : role.charAt(0).toUpperCase() + role.slice(1)}`;
+        result.className = "result-box";
+        result.innerText = output;
+    }
+
+    spinPlayer();
+}
+
+// ===== CEK ID MLBB =====
+async function cekIDML() {
+    const id = document.getElementById("mlID").value.trim();
+    const server = document.getElementById("mlServer").value.trim();
+    const result = document.getElementById("mlResult");
+
+    if (!id || !server) {
+        result.className = "result-box warn";
+        result.innerText = "❌ ID dan Server wajib diisi.";
+        return;
+    }
+
+    result.className = "result-box info";
+    result.innerHTML = `<div class="loading-wrap"><div class="spinner"></div><span class="loading-text">Scanning MLBB Database...</span></div>`;
+
+    try {
+        const formData = new URLSearchParams();
+        formData.append("attribute_amount", "Weekly Pass");
+        formData.append("text-5f6f144f8ffee", id);
+        formData.append("text-1601115253775", server);
+        formData.append("quantity", 1);
+        formData.append("add-to-cart", 15145);
+        formData.append("product_id", 15145);
+        formData.append("variation_id", 4690783);
+
+        const workerURL = "https://noisy-morning-709b.kaydenzolucy.workers.dev/";
+
+        const res = await fetch(workerURL, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: formData.toString()
+        });
+
+        if (!res.ok) throw new Error("Server tidak merespon");
+
+        const data = await res.json();
+
+        if (!data.message) {
+            result.className = "result-box warn";
+            result.innerText = "❌ ID atau Server tidak valid.";
+            return;
+        }
+
+        const lines = data.message.replace(/<br\s*\/?>/gi, "\n").split("\n");
+        const info = { userID: "", serverID: "", nickname: "" };
+
+        lines.forEach(line => {
+            const lower = line.toLowerCase();
+            if (lower.includes("user id")) info.userID = line.split(":")[1]?.trim();
+            else if (lower.includes("server id")) info.serverID = line.split(":")[1]?.trim();
+            else if (lower.includes("in-game nickname")) info.nickname = line.split(":")[1]?.trim();
+        });
+
+        result.className = "result-box";
+        result.innerText =
+`✅ DATA DITEMUKAN
+━━━━━━━━━━━━━━━━━━━━
+👤 User ID          : ${info.userID || "-"}
+🌐 Server ID        : ${info.serverID || "-"}
+🎮 In-Game Nickname : ${info.nickname || "-"}`;
+
+    } catch (err) {
+        result.className = "result-box warn";
+        result.innerText = "⚠️ Terjadi kesalahan koneksi\n" + err.message;
+    }
+}
+
+// ===== GMAIL ALIAS GENERATOR =====
+function generateAlias() {
+    const email = document.getElementById("aliasEmail").value.trim();
+    const count = parseInt(document.getElementById("aliasCount").value) || 50;
+    const type = document.getElementById("aliasType").value;
+    const listEl = document.getElementById("aliasList");
+    const countEl = document.getElementById("aliasCount");
+
+    if (!email || !email.includes("@") || !email.split("@")[1].includes(".")) {
+        listEl.style.display = "block";
+        listEl.innerHTML = '<span style="color:#ff6b6b;">❌ Format email tidak valid. Contoh: user@gmail.com</span>';
+        countEl.textContent = "";
+        return;
+    }
+
+    const [username, domain] = email.split("@");
+    const aliases = new Set();
+    const maxAttempts = count * 10;
+    let attempts = 0;
+
+    function addDotAlias() {
+        if (username.length < 2) return;
+        const positions = [];
+        const numDots = Math.floor(Math.random() * Math.min(3, username.length - 1)) + 1;
+        const avail = [];
+        for (let i = 1; i < username.length; i++) avail.push(i);
+        for (let i = 0; i < numDots && avail.length > 0; i++) {
+            const idx = Math.floor(Math.random() * avail.length);
+            positions.push(avail.splice(idx, 1)[0]);
+        }
+        positions.sort((a, b) => b - a);
+        let newUser = username;
+        positions.forEach(pos => {
+            newUser = newUser.slice(0, pos) + "." + newUser.slice(pos);
+        });
+        aliases.add(newUser + "@" + domain);
+    }
+
+    function addPlusAlias() {
+        const suffix = Array.from({length: 10}, () => {
+            const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+            return chars[Math.floor(Math.random() * chars.length)];
+        }).join("");
+        aliases.add(username + "+" + suffix + "@" + domain);
+    }
+
+    while (aliases.size < count && attempts < maxAttempts) {
+        attempts++;
+        if (type === "dot") addDotAlias();
+        else if (type === "plus") addPlusAlias();
+        else {
+            Math.random() > 0.5 ? addDotAlias() : addPlusAlias();
+        }
+    }
+
+    const result = Array.from(aliases).slice(0, count);
+
+    listEl.style.display = "block";
+    listEl.innerHTML = result.map((a, i) =>
+        `<div class="alias-item" onclick="copyAlias(this, '${a.replace(/'/g, "\'")}')">${i + 1}. ${a}</div>`
+    ).join("");
+    countEl.textContent = `✅ ${result.length} alias berhasil dibuat`;
+    showToast(`${result.length} alias dibuat!`);
+}
+
+function copyAlias(el, text) {
+    navigator.clipboard.writeText(text).then(() => {
+        el.classList.add("copied");
+        el.textContent = "✓ " + text;
+        showToast("Copied: " + text);
+        setTimeout(() => {
+            el.classList.remove("copied");
+            el.textContent = el.textContent.replace("✓ ", "");
+        }, 1500);
+    });
+}
+
+function copyAllAlias() {
+    const items = document.querySelectorAll(".alias-item");
+    if (!items.length) {
+        showToast("Belum ada alias yang dibuat!");
+        return;
+    }
+    const text = Array.from(items).map(el => el.textContent.replace(/^\d+\.\s*/, "")).join("\n");
+    navigator.clipboard.writeText(text).then(() => {
+        showToast(`Copied ${items.length} aliases!`);
+    });
+}
 </script>
 
 </body>
